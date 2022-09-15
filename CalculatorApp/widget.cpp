@@ -2,9 +2,12 @@
 
 #include <QLabel>
 #include <QPushButton>
+#include <QGridLayout>
+#include <QBoxLayout>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), m_isFirst(true) {
+
     m_label = new QLabel("0", this);			// 레이블 객체의 생성
     m_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);	// 계산기는 오른쪽 정렬
     m_label->setGeometry(10, 5, 230, 40);		// 위치와 크기 설정
@@ -25,13 +28,18 @@ Widget::Widget(QWidget *parent)
         SLOT(numButton( )), SLOT( ), SLOT( ), SLOT(opButton( ))
     };
 
+    QGridLayout *gridLayout = new QGridLayout(this);
+    gridLayout-> setHorizontalSpacing(5);
+    gridLayout-> setVerticalSpacing(5);
+
     for(int y = 0; y < WITDH; ++y) {		// 4 x 4의 2차원으로 배치
         for(int x = 0; x < WITDH; ++x) {
             int n = x+y*WITDH;		 	// 2차원 공간을 1차원으로 변환
             m_buttons.append(new QPushButton(ButtonChar[n], this));
-            m_buttons.at(n)->setGeometry(5+60*x, 50+60*y, 60, 60);
+            m_buttons.at(n)->resize(60, 60);
             if(n != 13 && n != 14)
                 connect(m_buttons.at(n), SIGNAL(clicked( )), methods[n]);
+            gridLayout -> addWidget(m_buttons.at(n),y,x);
         }
     }
 #if 0
