@@ -5,6 +5,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QTextEdit>
+#include <QMdiArea>
+#include <QLabel>
 
 
 class QtEditor : public QMainWindow
@@ -13,7 +15,8 @@ class QtEditor : public QMainWindow
 private:
     QAction *makeAction(QString icon, QString name, QString shortCut,\
                         QString toolTip, QObject* recv, const char* slot);
-    QTextEdit *textedit;
+    QLabel *statusLabel;
+    QMdiArea* mdiArea;
 
 
 public:
@@ -23,7 +26,12 @@ public:
 public slots:
     void newFile();
     void openFile();
+
     void saveFile();
     void alignText();
+    void editAction();
+
+    void setTextFont(QFont);
+    void setTextSize(qreal);
 };
 #endif // QTEDITOR_H
