@@ -5,5 +5,8 @@
         <file>images/quit.png</file>
         <file>images/save.png</file>
         <file>images/undo.png</file>
+        <file>images/saveas.png</file>
+        <file>images/color.png</file>
+        <file>images/font.png</file>
     </qresource>
 </RCC>

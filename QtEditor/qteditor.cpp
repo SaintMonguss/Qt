@@ -11,6 +11,12 @@
 #include <QLabel>
 #include <QDockWidget>
 #include <QMdiSubWindow>
+#include <QFileDialog>
+#include <QDebug>
+#include <QColorDialog>
+#include <QFontDialog>
+#include <QPrinter>
+#include <QPrintDialog>
 
 
 
@@ -20,12 +26,11 @@ QtEditor::QtEditor(QWidget *parent)
     mdiArea = new QMdiArea(this);
     setCentralWidget(mdiArea);
 
-#if 1
-    QTextEdit *textedit = new QTextEdit(this);
-    mdiArea->addSubWindow(textedit);
-#else
-    newFile();
-#endif
+
+//    QTextEdit *textedit = new QTextEdit(this);
+//    mdiArea->addSubWindow(textedit);
+
+
     //독위젯
     QLabel* label = new QLabel("Dock Widget", this);
     QDockWidget *dock = new QDockWidget("Dock Widget", this);
@@ -44,13 +49,17 @@ QtEditor::QtEditor(QWidget *parent)
     fileMenu -> addAction(openAct);
     QAction *saveAct = makeAction(":/images/save.png","&Save","Ctrl+S","save this documents",this, SLOT(saveFile()));
     fileMenu -> addAction(saveAct);
+    QAction *saveAsAct = makeAction(":/images/saveas.png","&SaveAs","Ctrl+a","save this documents another name",this, SLOT(saveAsFile()));
+    fileMenu -> addAction(saveAsAct);
+    QAction *printAction = makeAction(":/images/print.png","&Print","Ctrl+p","printing this documents", this, SLOT(printFile()));
+    fileMenu -> addAction(printAction);
     fileMenu -> addSeparator();
     QAction *quitAct = makeAction(":/images/quit.png","&Quit","Ctrl+Q","bye bye",qApp, SLOT(quit()));
     fileMenu -> addAction(quitAct);
 
     //Edit 메뉴
     QMenu *editMenu = menubar -> addMenu("&Edit");
-    QAction *undoAct = makeAction(":/images/undo.jpg", "&Undo", "Ctrl+z", "실행 취소", this , SLOT(editAction()));
+    QAction *undoAct = makeAction(":/images/undo.png", "&Undo", "Ctrl+z", "실행 취소", this , SLOT(editAction()));
     editMenu -> addAction(undoAct);
     QAction *redoAct = makeAction(":/images/redo.jpg", "&Redo", "Ctrl+Shift+z", "실행 취소를 취소", this, SLOT(editAction()));
     editMenu -> addAction(redoAct);
@@ -69,6 +78,11 @@ QtEditor::QtEditor(QWidget *parent)
 
     //format 메뉴
     QMenu *formatMenu = menubar -> addMenu("&Format");
+    QAction *colorAction = makeAction(":/images/color.png", "&color", "Ctrl+t", "색상 선택", this, SLOT(setColor()));
+    formatMenu-> addAction(colorAction);
+    QAction *fontAction = makeAction(":/images/font.png", "&font", "Ctrl+o", "폰트 선택", this, SLOT(setFont()));
+    formatMenu-> addAction(fontAction);
+
     // ->정렬메뉴
     QMenu *alignMenu = formatMenu -> addMenu("&align");
     QAction *alignLeft = alignMenu-> addAction("&Left");
@@ -82,9 +96,11 @@ QtEditor::QtEditor(QWidget *parent)
     fileToolBar -> addAction(newAct);
     fileToolBar -> addSeparator();
     fileToolBar -> addAction(quitAct);
+    fileToolBar -> addSeparator();
+    fileToolBar -> addAction(printAction);
 
     //윈도우 메뉴
-    QMenu *windowMenu = menubar -> addMenu("&Window");
+    windowMenu = menubar -> addMenu("&Window");
     windowMenu -> addAction(fileToolBar -> toggleViewAction());
     windowMenu -> addAction(dock-> toggleViewAction());
     windowMenu -> addSeparator();
@@ -106,7 +122,7 @@ QtEditor::QtEditor(QWidget *parent)
     connect(fontComboBox, SIGNAL(currentFontChanged(QFont)), SLOT(setTextFont(QFont)));
     QDoubleSpinBox* sizeSpinBox = new QDoubleSpinBox(this);
     connect(sizeSpinBox, SIGNAL(valueChanged(double)), SLOT(setTextSize(qreal)));
-
+    //툴바를 다음줄로 내려줌
     addToolBarBreak();
     QToolBar *formatToolbar = addToolBar("&Format");
 
@@ -120,6 +136,9 @@ QtEditor::QtEditor(QWidget *parent)
     statusLabel-> setObjectName("StatusLabel");
     statusbar-> addPermanentWidget(statusLabel);
     statusbar -> showMessage("started", 1500);
+
+    // 첫 edit 화면 생성
+    newFile();
 }
 
 QtEditor::~QtEditor()
@@ -129,18 +148,35 @@ QtEditor::~QtEditor()
 void QtEditor::newFile()
 {
     qDebug("새파일이 뽕 생김");
+    QAction* windowAct = new QAction("New File",this);
+    windowMenu -> addAction(windowAct);
     QTextEdit *textedit = new QTextEdit;
+    connect(textedit, SIGNAL(destroyed(QObject*)), windowAct, SLOT(deleteLater()));
+    connect(textedit, SIGNAL(cursorPositionChanged()),SLOT(setFontWidget()));
     mdiArea ->addSubWindow(textedit);
+    windowHash[windowAct] = textedit;
+    connect(windowAct, SIGNAL(triggered()),SLOT(selectWindow()));
     textedit -> show();
 }
 
 void QtEditor::openFile()
 {
-    qDebug("파일을 샥 열음");
+    QString filename = QFileDialog::getOpenFileName(this, "Select file to open",
+                                                    ".", "Text File (*.txt *.html *.c *.cpp *.h");
+    qDebug() << filename;
 }
 void QtEditor::saveFile()
 {
-    qDebug("파일을 사각사각 저장함");
+    QString filename = QFileDialog::getSaveFileName(this, "Select file to save",
+                                                    ".", "Text File (*.txt *.html *.c *.cpp *.h");
+    qDebug() << filename;
+}
+
+void QtEditor::saveAsFile()
+{
+    QString filename = QFileDialog::getSaveFileName(this, "Select file to save as",
+                                                    ".", "Text File (*.txt *.html *.c *.cpp *.h");
+    qDebug() << filename;
 }
 
 void QtEditor::alignText()
@@ -148,18 +184,21 @@ void QtEditor::alignText()
 
 }
 
-// 메뉴 추가 함수
-QAction *QtEditor::makeAction(QString icon, QString name, QString shortCut,\
-                    QString toolTip, QObject* recv, const char* slot)
+void QtEditor::setColor()
 {
-    QAction *act = new QAction(name, this);
-    if(icon.length())
-        act->setIcon(QIcon(icon));
-    act->setShortcut(shortCut);
-    act->setStatusTip(toolTip);
-    connect(act,SIGNAL(triggered()), recv, slot);
-    return act;
+    QTextEdit *textedit = (QTextEdit*)mdiArea ->currentSubWindow() -> widget();
+    QColor color = QColorDialog::getColor(textedit->textColor(), this);
+    if(color.isValid()) textedit -> setTextColor(color);
 }
+
+void QtEditor::setFont()
+{
+    bool ok;
+    QTextEdit *textedit = (QTextEdit*)mdiArea -> currentSubWindow() ->widget();
+    QFont font = QFontDialog::getFont(&ok, textedit -> currentFont(), this);
+    if(ok) textedit -> setCurrentFont(font);
+}
+
 
 void QtEditor::editAction()
 {
@@ -185,4 +224,35 @@ void QtEditor::setTextSize(qreal size)
 {
     QTextEdit *textedit = (QTextEdit*)mdiArea->currentSubWindow()->widget();
     textedit ->setFontPointSize(size);
+}
+
+void QtEditor::printFile()
+{
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setFullPage(true);
+    QPrintDialog printDialog(&printer, this);
+    if(printDialog.exec() == QDialog::Accepted)
+    {
+        QTextEdit* textedit = (QTextEdit*) mdiArea -> currentSubWindow() -> widget();
+        textedit -> print(&printer);
+    }
+}
+
+void QtEditor::selectWindow()
+{
+    QTextEdit* textedit = (QTextEdit*)windowHash[(QAction*)sender()];
+    textedit -> setFocus();
+}
+
+// 메뉴 추가 함수
+QAction *QtEditor::makeAction(QString icon, QString name, QString shortCut,\
+                    QString toolTip, QObject* recv, const char* slot)
+{
+    QAction *act = new QAction(name, this);
+    if(icon.length())
+        act->setIcon(QIcon(icon));
+    act->setShortcut(shortCut);
+    act->setStatusTip(toolTip);
+    connect(act,SIGNAL(triggered()), recv, slot);
+    return act;
 }
