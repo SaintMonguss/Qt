@@ -1,6 +1,7 @@
 #include "BreakoutProjectHeader.h"
 
 #include <QLabel>
+#include <QApplication>
 
 #define WIDTH 50
 #define HEIGHT 12
@@ -27,6 +28,8 @@ Breakout::Breakout(QWidget *parent)
         }
     }
     resize(SCR_WIDTH,SCR_HEIGHT);
+
+    setMouseTracking(true);
 }
 
 Breakout::~Breakout()
@@ -38,3 +41,34 @@ Breakout::~Breakout()
         delete bricks[i];
 }
 
+void Breakout::keyPressEvent(QKeyEvent *e)
+{
+    int x;
+    switch(e -> key())
+    {
+    case Qt::Key_Left:
+        x = paddle -> pos().x();
+        if (x>0)
+            paddle -> move(paddle ->x()-MOVE_SPEED, paddle->y());
+        break;
+    case Qt::Key_Right:
+        x = paddle -> pos().x();
+        if (x+WIDTH < width())
+            paddle -> move(paddle ->x()+MOVE_SPEED, paddle->y());
+        break;
+    case Qt::Key_Escape:
+        qApp -> exit();
+        break;
+    default:
+        QWidget::keyPressEvent(e);
+    }
+}
+
+void Breakout::mouseMoveEvent(QMouseEvent *e)
+{
+    int x = e -> pos().x();
+    x = (x<0) ?
+                0 :(x+WIDTH > width())?
+                    width()-WIDTH :x;
+    paddle -> move(x, paddle -> y());
+}

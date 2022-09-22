@@ -4,6 +4,7 @@
 #include <QObject>
 
 class counter : public QObject
+
 {
     Q_OBJECT
     Q_PROPERTY(int value READ value WRITE setValue NOTIFY valueChanged)

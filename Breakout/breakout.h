@@ -2,6 +2,8 @@
 #define BREAKOUT_H
 
 #include <QWidget>
+#include <QMouseEvent>
+#include <QkeyEvent>
 
 class QLabel;
 
@@ -11,7 +13,13 @@ class Breakout : public QWidget
 
 public:
     Breakout(QWidget *parent = nullptr);
-    ~Breakout();\
+    ~Breakout();
+
+protected:
+    void keyPressEvent(QKeyEvent *);
+    void mouseMoveEvent(QMouseEvent *e);
+
+    static const int MOVE_SPEED = 5;
 
 private:
     static const int NO_OF_BRICKS = 30;
