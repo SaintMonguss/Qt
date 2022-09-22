@@ -21,6 +21,7 @@ private:
     QMdiArea* mdiArea;
     QMenu *windowMenu;
     QHash<QAction*, QWidget*> windowHash;
+    bool eventFilter(QObject*, QEvent*);
 
 
 public:

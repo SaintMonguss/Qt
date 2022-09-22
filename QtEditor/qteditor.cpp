@@ -17,6 +17,7 @@
 #include <QFontDialog>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QKeyEvent>
 
 
 
@@ -157,6 +158,7 @@ void QtEditor::newFile()
     windowHash[windowAct] = textedit;
     connect(windowAct, SIGNAL(triggered()),SLOT(selectWindow()));
     textedit -> show();
+    textedit -> installEventFilter(this);
 }
 
 void QtEditor::openFile()
@@ -242,6 +244,18 @@ void QtEditor::selectWindow()
 {
     QTextEdit* textedit = (QTextEdit*)windowHash[(QAction*)sender()];
     textedit -> setFocus();
+}
+
+bool QtEditor::eventFilter(QObject *obj, QEvent *event)
+{
+    if(event -> type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        qDebug("key press %d", keyEvent -> key());
+        return true;
+    }
+    else
+        return QObject::eventFilter(obj, event);
 }
 
 // 메뉴 추가 함수
