@@ -1,0 +1,6 @@
+#ifndef BREAKOUTPROJECTHEADER_H
+#define BREAKOUTPROJECTHEADER_H
+
+#include "breakout.h"
+
+#endif // BREAKOUTPROJECTHEADER_H
