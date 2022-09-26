@@ -16,12 +16,12 @@ Breakout::Breakout(QWidget *parent)
     : QWidget(parent),xDir(1),yDir(-1)
 {
 
-    ball = new QLabel(this);
+    ball = new Ball(this);
     ball -> setGeometry(SCR_WIDTH*0.8, SCR_HEIGHT*0.875, 10, 10);
-    ball -> setStyleSheet("QLabel {background-color :red; border-radius: 5px;}");
-    paddle = new QLabel(this);
+    //ball -> setStyleSheet("QLabel {background-color :red; border-radius: 5px;}");
+    paddle = new Paddle(this);
     paddle -> setGeometry(SCR_WIDTH*0.7, SCR_HEIGHT*0.9, WIDTH, HEIGHT);
-    paddle -> setStyleSheet("QLabel { background-color:blue;}");
+    //paddle -> setStyleSheet("QLabel { background-color:blue;}");
     //점수 관련 표시
     score = 0;
     scoreLabel = new QLabel(this);
@@ -32,7 +32,7 @@ Breakout::Breakout(QWidget *parent)
     {
         for(int x = 0; x < 6 ; x++, i++)
         {
-        bricks[i] = new QLabel(this);
+        bricks[i] = new Brick(this);
         bricks[i] -> setStyleSheet("QLabel { background-color:cyan;" "border:1px solid black}");
         bricks[i] -> setGeometry(x*WIDTH, y*HEIGHT + 30, WIDTH, HEIGHT);
         }

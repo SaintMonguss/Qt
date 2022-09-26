@@ -1,11 +1,13 @@
 #ifndef BREAKOUT_H
 #define BREAKOUT_H
 
+#include "BreakoutProjectHeader.h"
 #include <QWidget>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QTimer>
 #include <QMediaPlayer>
+
 
 class QLabel;
 
@@ -29,9 +31,9 @@ protected:
 private:
     static const int NO_OF_BRICKS = 30;
     int score;
-    QLabel *ball;
-    QLabel *paddle;
-    QLabel *bricks[NO_OF_BRICKS];
+    Ball *ball;
+    Paddle *paddle;
+    Brick *bricks[NO_OF_BRICKS];
     QLabel *scoreLabel;
     QMediaPlayer *bgPlayer;
     QMediaPlayer *effectPlayer;
