@@ -20,8 +20,8 @@ void Worker:: run()
     }
 
      QString t = QString( "0x%1" ).arg((long)QThread::currentThreadId(), 16);
-     sema -> acquire(1);
+//     sema -> acquire(1);
     data -> replace(position, QString :: number(position) + " -" + t);
-     sema -> release();
+//     sema -> release();
     qInfo() << t << "Finished" << position;
 }

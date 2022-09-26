@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,11 +10,10 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    breakout.cpp
+    custombutton.cpp
 
 HEADERS += \
-    BreakoutProjectHeader.h \
-    breakout.h
+    custombutton.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

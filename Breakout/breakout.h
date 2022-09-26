@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QMouseEvent>
-#include <QkeyEvent>
+#include <QKeyEvent>
+#include <QTimer>
+#include <QMediaPlayer>
 
 class QLabel;
 
@@ -18,14 +20,22 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *e);
+    void timerEvent(QTimerEvent *);
+    void moveObjects();
+    void checkCollision();
 
     static const int MOVE_SPEED = 5;
 
 private:
     static const int NO_OF_BRICKS = 30;
-
+    int score;
     QLabel *ball;
     QLabel *paddle;
     QLabel *bricks[NO_OF_BRICKS];
+    QLabel *scoreLabel;
+    QMediaPlayer *bgPlayer;
+    QMediaPlayer *effectPlayer;
+    int timerId;
+    int xDir, yDir;
 };
 #endif // BREAKOUT_H
