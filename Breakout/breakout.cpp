@@ -1,4 +1,4 @@
-#include "BreakoutProjectHeader.h"
+#include "breakout.h"
 
 #include <QLabel>
 #include <QApplication>
@@ -17,7 +17,7 @@ Breakout::Breakout(QWidget *parent)
 {
 
     ball = new Ball(this);
-    ball -> setGeometry(SCR_WIDTH*0.8, SCR_HEIGHT*0.875, 10, 10);
+    ball -> setGeometry(SCR_WIDTH*0.8, SCR_HEIGHT*0.875, 20, 20);
     //ball -> setStyleSheet("QLabel {background-color :red; border-radius: 5px;}");
     paddle = new Paddle(this);
     paddle -> setGeometry(SCR_WIDTH*0.7, SCR_HEIGHT*0.9, WIDTH, HEIGHT);

@@ -1,9 +1,9 @@
 #ifndef BRICK_H
 #define BRICK_H
 
-#include <QWidget>
+#include <QLabel>
 
-class Brick : public QWidget
+class Brick : public QLabel
 {
     Q_OBJECT
 public:

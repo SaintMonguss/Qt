@@ -5,9 +5,11 @@
 
 class Ball : public QWidget
 {
-    Q_OBJECT
 public:
     explicit Ball(QWidget *parent = nullptr);
+
+private:
+    void paintEvent(QPaintEvent *e);
 
 signals:
 

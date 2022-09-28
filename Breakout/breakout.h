@@ -1,7 +1,9 @@
 #ifndef BREAKOUT_H
 #define BREAKOUT_H
 
-#include "BreakoutProjectHeader.h"
+#include "ball.h"
+#include "brick.h"
+#include "paddle.h"
 #include <QWidget>
 #include <QMouseEvent>
 #include <QKeyEvent>

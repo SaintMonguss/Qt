@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui 3dcore 3drender 3dinput 3dlogic 3dextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,17 +9,11 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ball.cpp \
-    brick.cpp \
     main.cpp \
-    breakout.cpp \
-    paddle.cpp
+    mainwindow.cpp
 
 HEADERS += \
-    ball.h \
-    breakout.h \
-    brick.h \
-    paddle.h
+    mainwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

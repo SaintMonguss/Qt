@@ -1,9 +1,9 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
-#include <QWidget>
+#include <QLabel>
 
-class Paddle : public QWidget
+class Paddle : public QLabel
 {
     Q_OBJECT
 public:
