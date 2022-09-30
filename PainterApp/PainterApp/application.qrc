@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ImageSlide.qml</file>
+    </qresource>
+</RCC>
