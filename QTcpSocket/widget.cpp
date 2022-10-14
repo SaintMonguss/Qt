@@ -51,10 +51,7 @@ void Widget::echoData()
     QTcpSocket *clientConnection = dynamic_cast<QTcpSocket *>(sender());
     QByteArray bytearray = clientConnection -> read(BLOCK_SIZE);
     foreach(QTcpSocket *sock, clientList)
-    {
-        if(sock != clientConnection)
             sock->write(bytearray);
-    }
     infoLabel -> setText(QString(bytearray));
 }
 
@@ -62,4 +59,5 @@ void Widget::echoData()
 Widget::~Widget()
 {
 }
+
 
