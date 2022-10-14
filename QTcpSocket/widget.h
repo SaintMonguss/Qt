@@ -22,5 +22,6 @@ private slots:
 private:
     QLabel *infoLabel;
     QTcpServer *tcpServer;
+    QList<QTcpSocket *> clientList;
 };
 #endif // WIDGET_H

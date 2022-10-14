@@ -65,10 +65,11 @@ void Widget::echoData( )
 
 void Widget::sendData( )
 {
-    QString str = inputLine->text( );
+    QString str = "용훈:" + inputLine->text( );
     if(str.length( )) {
         QByteArray bytearray;
         bytearray = str.toUtf8( );
         clientSocket->write(bytearray);
+        inputLine->setText("");
     }
 }

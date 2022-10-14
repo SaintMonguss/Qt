@@ -42,15 +42,19 @@ void Widget::clientConnect()
             clientConnection, SLOT(deleteLater()));
     connect(clientConnection, SIGNAL(readyRead()), SLOT(echoData()));
     infoLabel -> setText("new connection is established ...");
+
+    clientList.append(clientConnection);
 }
 
 void Widget::echoData()
 {
-    QTcpSocket *clientConnection = (QTcpSocket *)sender();
-    if (clientConnection -> bytesAvailable() > BLOCK_SIZE)
-        return;
+    QTcpSocket *clientConnection = dynamic_cast<QTcpSocket *>(sender());
     QByteArray bytearray = clientConnection -> read(BLOCK_SIZE);
-    clientConnection -> write(bytearray);
+    foreach(QTcpSocket *sock, clientList)
+    {
+        if(sock != clientConnection)
+            sock->write(bytearray);
+    }
     infoLabel -> setText(QString(bytearray));
 }
 
