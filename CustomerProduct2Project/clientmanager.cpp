@@ -56,16 +56,15 @@ ClientManager::~ClientManager()
 
 
 //고객 정보 추가
-void ClientManager::AddObj(int Id, QString name, QString)
+void ClientManager::AddObj(QString name, QString phoneNumber, QString address, QString e_mail)
 {
-    string input;
     Client* client;
     int id;
 
     if (clientList.empty())
         id = 1;
     else
-        id = (clientList.rbegin()->first) + 1;
+        id = (clientList.lastKey()) + 1; // lastkey 작동 방식 확인 필요
     try
     {
         client = new Client(id);
@@ -76,15 +75,15 @@ void ClientManager::AddObj(int Id, QString name, QString)
         return;
     }
 
-    client->SetName(input);
-    client->SetPhoneNumber(input);
-    client->SetAddress(input);
-    client->SetEmail(input);
+    client->SetName(name);
+    client->SetPhoneNumber(phoneNumber);
+    client->SetAddress(address);
+    client->SetEmail(e_mail);
     try
     {
-        auto tmp = (clientList.insert({ id, client }));
-        if (tmp.second == false)
+        if (clientList.find(id) == clientList.end())
             throw;
+        clientList.insert(id, client );
     }
     catch (...)
     {
@@ -95,51 +94,16 @@ void ClientManager::AddObj(int Id, QString name, QString)
 }
 
 // 고객 정보 삭제
-void ClientManager::DelObj()
+void ClientManager::DelObj(int id)
 {
-    int id;
-    char check;
-    Client *client;
-
-    system("cls");
-    printClientForm(clientList);
-    std::cout << std::endl;;
-    std::cout << std::endl;;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << "                                                         고객 정보 삭제" << std::endl;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << std::endl;
-    std::cout << "뒤로 가고 싶다면 -1 입력" << std::endl << std::endl;
-    std::cout << "삭제할 고객의 ID를 입력 해주세요 : ";
-    id = InputFormat::IntCin();
-    if (id == -1)
-        return;
-    try
+    if(clientList.find(id) == clientList.end())
     {
-        clientList.at(id);
-    }
-    catch (std::out_of_range e)
-    {
-        std::cout << "해당하는 ID는 존재하지 않습니다!!" << std::endl;
-        Sleep(1000);
+        qDebug() << "해당하는 ID는 존재하지 않음";
         return;
     }
-    client = clientList.find(id)->second;			// 찾아서 클라이언트 객체를 할당
-    std::cout << client->GetName() << " 고객 정보를 삭제 하시겠습니까?"<<std::endl;
-    do
-    {
-        cin.ignore(999, '\n');						//버퍼 청소
-        std::cout << "[ Y / N ] : ";
-        std::cin >> check;
-        check = toupper(check);						// 대문자 전환
-    } while ((check != 'Y') && (check != 'N'));
-    if (check == 'N')
-        return;
-    clientList.erase(id);
-    std::cout << "[" << client->GetName() << "]" << " 고객 정보를 삭제했습니다" << std::endl;
-    Sleep(1500);
-    system("cls");
+    clientList.remove(id);
 }
+
 // 고객 정보 수정
 void ClientManager::ModiObj()
 {
@@ -259,66 +223,26 @@ void* ClientManager::TossObj(int id)
     return client;
 }
 
-// 고객 관련 출력 템플릿
-void ClientManager::printClientForm(map<int, Client*> &clientList) const
-{
-    Client* client;
-    std::cout << "┌───────┬───────────┬──────────────┬────────────────────────────────────────────────────────────────┬─────────────────────────┐" << std::endl;;
-    std::cout << "│   ID       이름          번호                                      주소                                       E-mail        │" << std::endl;;
-    for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-    {
-        client = itr->second;
-        std::cout << "├───────┼───────────┼──────────────┼────────────────────────────────────────────────────────────────┼─────────────────────────┤" << std::endl;;
-        std::cout << "│ ";
-        ///////////////////// ID 칸 양식
-        cout.fill('0');
-        std::cout.width(C_ID_WIDTH);
-        std::cout << itr->first;
-        cout.fill(' ');								// 공간 채움을 공백으로 다시 변경
-        std::cout << " ";
-        ///////////////////// 이름 칸 양식
-        std::cout << "  ";
-        std::cout.width(C_NAME_WIDTH);
-        std::cout << client->GetName();
-        std::cout << "  ";
-        ///////////////////// 번호 칸 양식
-        std::cout << "  ";
-        std::cout.width(C_PHONNUMBER_WIDTH);
-        std::cout << client->GetPhoneNumber();
-        std::cout << "  ";
-        ///////////////////// 주소 칸 양식
-        std::cout.width(C_ADRESS_WIDTH);
-        std::cout << client->GetAddress();
-        std::cout << "  ";
-        ///////////////////// 이메일 칸 양식
-        std::cout.width(C_EMAIL_WIDTH);
-        std::cout << client->GetEmail();
-        std::cout << " │" << std::endl;
-    }
-    std::cout << "└───────┴───────────┴──────────────┴────────────────────────────────────────────────────────────────┴─────────────────────────┘" << std::endl;;
-    return;
-}
+//std::vector<QString> ClientManager::parseCSV(std::istream& file, char delimiter)
+//{
+//    std::stringstream ss;
+//    std::vector<QString> row;
+//    string t = " \n\r\t";
 
-std::vector<string> ClientManager::parseCSV(std::istream& file, char delimiter)
-{
-    std::stringstream ss;
-    std::vector<string> row;
-    string t = " \n\r\t";
-
-    while (!file.eof()) {
-        char c = file.get();
-        if (c == delimiter || c == '\r' || c == '\n') {
-            if (file.peek() == '\n') file.get();
-            string s = ss.str();
-            s.erase(0, s.find_first_not_of(t));
-            s.erase(s.find_last_not_of(t) + 1);
-            row.push_back(s);
-            ss.str("");
-            if (c != delimiter) break;
-        }
-        else {
-            ss << c;
-        }
-    }
-    return row;
-}
+//    while (!file.eof()) {
+//        char c = file.get();
+//        if (c == delimiter || c == '\r' || c == '\n') {
+//            if (file.peek() == '\n') file.get();
+//            string s = ss.str();
+//            s.erase(0, s.find_first_not_of(t));
+//            s.erase(s.find_last_not_of(t) + 1);
+//            row.push_back(s);
+//            ss.str("");
+//            if (c != delimiter) break;
+//        }
+//        else {
+//            ss << c;
+//        }
+//    }
+//    return row;
+//}

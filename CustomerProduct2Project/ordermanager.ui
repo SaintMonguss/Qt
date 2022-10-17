@@ -32,16 +32,36 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QTableWidget" name="tableWidget_5">
-       <attribute name="horizontalHeaderStretchLastSection">
-        <bool>true</bool>
-       </attribute>
+      <widget class="QTreeWidget" name="treeWidget_5">
        <column>
         <property name="text">
-         <string>tr(&quot;ID&quot;)</string>
+         <string>tr(&quot;orderID&quot;)</string>
         </property>
         <property name="font">
          <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>tr(&quot;clientName&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>tr(&quot;clientID&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -52,36 +72,18 @@
         </property>
         <property name="font">
          <font>
+          <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;productId&quot;)</string>
+         <string>tr(&quot;date&quot;)</string>
         </property>
         <property name="font">
          <font>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>tr(&quot;clientId&quot;)</string>
-        </property>
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>tr(&quot;Date&quot;)</string>
-        </property>
-        <property name="font">
-         <font>
+          <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -92,16 +94,18 @@
         </property>
         <property name="font">
          <font>
+          <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;orderStock&quot;)</string>
+         <string>tr(&quot;orderStcok&quot;)</string>
         </property>
         <property name="font">
          <font>
+          <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -127,7 +131,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_4">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_5">
         <attribute name="title">
@@ -147,7 +151,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;orderId&quot;)</string>
+                <string>tr(&quot;orderID&quot;)</string>
                </property>
               </widget>
              </item>
@@ -174,7 +178,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;productName&quot;)</string>
+                <string>tr(&quot;clientName&quot;)</string>
                </property>
               </widget>
              </item>
@@ -194,7 +198,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;productId&quot;)</string>
+                <string>tr(&quot;clientID&quot;)</string>
                </property>
               </widget>
              </item>
@@ -214,7 +218,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;clientId&quot;)</string>
+                <string>tr(&quot;productName&quot;)</string>
                </property>
               </widget>
              </item>
@@ -407,7 +411,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;ID&quot;)</string>
+                <string>tr(&quot;orderID&quot;)</string>
                </property>
               </widget>
              </item>
@@ -434,7 +438,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;productName&quot;)</string>
+                <string>tr(&quot;clientName&quot;)</string>
                </property>
               </widget>
              </item>
@@ -457,7 +461,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;productId&quot;)</string>
+                <string>tr(&quot;clientID&quot;)</string>
                </property>
               </widget>
              </item>
@@ -477,7 +481,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;clientId&quot;)</string>
+                <string>tr(&quot;productName&quot;)</string>
                </property>
               </widget>
              </item>
