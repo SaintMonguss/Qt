@@ -39,26 +39,8 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>-1</number>
       </property>
-      <widget class="QWidget" name="clientTab">
-       <attribute name="title">
-        <string>고객 관리</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
-      </widget>
-      <widget class="QWidget" name="productTab">
-       <attribute name="title">
-        <string>상품 관리</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_11"/>
-      </widget>
-      <widget class="QWidget" name="orderTab">
-       <attribute name="title">
-        <string>주문 관리</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_26"/>
-      </widget>
      </widget>
     </item>
    </layout>

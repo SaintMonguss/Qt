@@ -2,9 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "clientmanager2.h"
-#include "productmanager2.h"
-#include "ordermanager2.h"
+#include "clientmanager.h"
+#include "productmanager.h"
+#include "ordermanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

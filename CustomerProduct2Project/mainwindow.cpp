@@ -6,6 +6,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    clientManager = new ClientManager;
+    productManager = new ProductManager;
+    orderManager = new OrderManager;
+
+    ui -> tabWidget->insertTab(0, clientManager, tr("clientManage"));
+    ui -> tabWidget->insertTab(1, productManager, tr("productManage"));
+    ui -> tabWidget->insertTab(2, orderManager, tr("orderManage"));
 
 }
 
