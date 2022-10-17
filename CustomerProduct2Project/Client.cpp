@@ -1,8 +1,7 @@
-#include "ProjectHeader.h"
-
 #include <iostream>
 #include <QString>
 
+#include "Client.h"
 
 Client::Client(int id)
 	: m_id(id), m_name(""), m_phoneNumber(""), m_address(""), m_Email("") {}

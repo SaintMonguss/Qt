@@ -105,54 +105,25 @@ void ClientManager::DelObj(int id)
 }
 
 // 고객 정보 수정
-void ClientManager::ModiObj()
+void ClientManager::ModiObj(int id ,QString name, QString phoneNumber, QString address, QString e_mail)
 {
-    int id;
     Client* client;
-    string tmp;
-
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << "                                                            고객 정보 수정" << std::endl;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << std::endl;
-    std::cout << "뒤로 가고 싶다면 -1 입력" << std::endl << std::endl;
-    std::cout << "수정할 고객의 ID를 입력 해주세요 : ";
-    id = InputFormat::IntCin();
-    if (id == -1)
-        return;
     try
     {
-        clientList.at(id);
+        if(clientList.find(id) == clientList.end())
+            throw;
     }
-    catch (std::out_of_range e)
+    catch (...)
     {
-        std::cout << "해당하는 ID는 존재하지 않습니다!!" << std::endl;
-        Sleep(1000);
+        qDebug() << "해당하는 ID 없음";
         return;
     }
-    client = clientList.find(id)->second;			// 찾아서 클라이언트 객체를 할당
-    std::cout << "현재 이름 : [ " << client->GetName() << " ]" << std::endl;
-    std::cout << "수정할 이름 : ";
-    std::cin >> tmp;
-    client->SetName(tmp);
-    std::cout << "현재 번호 : [ " << client->GetPhoneNumber() << " ]" << std::endl;
-    std::cout << "수정할 번호 : ";
-    std::cin >> tmp;
-    client->SetPhoneNumber(tmp);
-    std::cout << "현재 주소 : [ " << client->GetAddress() << " ]" << std::endl;
-    std::cout << "수정할 주소 : ";
-    std::cin.clear();
-    cin.ignore(999, '\n');							//버퍼 청소 필요
-    std::getline(std::cin, tmp, '\n');				// 한줄 전체를 받아야 함으로 getline() 사용
-    client->SetAddress(tmp);
-    std::cout << "현재 E-mail : [ " << client->GetEmail() << " ]" << std::endl;
-    std::cout << "수정할 E-mail : ";
-    std::cin >> tmp;
-    client->SetEmail(tmp);
-    std::cout << std::endl;
-    std::cout << "고객 정보 수정 완료";
-    Sleep(1500);
-    system("cls");
+    client = clientList.find(id).value();			// 찾아서 클라이언트 객체를 할당
+    client->SetName(name);
+    client->SetPhoneNumber(phoneNumber);
+    client->SetAddress(address);
+    client->SetEmail(e_mail);
+    return;
 }
 
 // 고객 정보 검색
@@ -192,18 +163,6 @@ void ClientManager::SerchObj()
     getchar(); // 제어 흐름 정지
     return;
 
-}
-
-//고객 정보 조회
-void ClientManager::PrintObj()
-{
-    system("cls");
-    printClientForm(clientList);
-    std::cout << std::endl;
-    std::cout << "이전 화면으로 돌아가려면 enter를 입력해 주세요...";
-    while (getchar() != '\n');
-    getchar(); // 제어 흐름 정지
-    return;
 }
 
 //고객 한명의 정보를 리턴하는 함수 / 반환값 any 형

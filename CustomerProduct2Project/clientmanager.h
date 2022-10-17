@@ -28,12 +28,12 @@ public:
     explicit ClientManager(QWidget *parent = nullptr);
     ~ClientManager();
 
-//    std::vector<QString> parseCSV(std::istream& , char);
+    //    std::vector<QString> parseCSV(std::istream& , char);
 
 public slots:
     void AddObj(QString, QString, QString, QString);
     void DelObj(int );
-    void ModiObj();
+    void ModiObj(int , QString , QString , QString , QString);
     void SerchObj();
     void PrintObj();
     Client TossObj(int);

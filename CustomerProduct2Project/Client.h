@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <QString>
-#include <QTableWidgetItem>
+#include <QTreeWidgetItem>
 
 using std::cout;
 using std::cin;
@@ -11,7 +11,7 @@ using std::string;
 
 
 
-class Client
+class Client : public QTreeWidgetItem
 {
 private:
 	const int m_id;
