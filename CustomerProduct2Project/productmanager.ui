@@ -35,7 +35,57 @@
       <widget class="QTreeWidget" name="treeWidget_2">
        <column>
         <property name="text">
-         <string notr="true">1</string>
+         <string>tr(&quot;ID&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>tr(&quot;name&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>tr(&quot;brand&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>tr(&quot;price&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>tr(&quot;stock&quot;)</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
         </property>
        </column>
       </widget>
@@ -59,7 +109,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_3">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_2">
         <attribute name="title">

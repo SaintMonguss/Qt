@@ -359,27 +359,37 @@
             <widget class="QComboBox" name="comboBox_5">
              <item>
               <property name="text">
-               <string>tr(&quot;name&quot;)</string>
+               <string>tr(&quot;orderID&quot;)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>tr(&quot;ID&quot;)</string>
+               <string>tr(&quot;clientName&quot;)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>tr(&quot;brand&quot;)</string>
+               <string>tr(&quot;clientID&quot;)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>tr(&quot;price&quot;)</string>
+               <string>tr(&quot;productName&quot;)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>tr(&quot;stock&quot;)</string>
+               <string>tr(&quot;date&quot;)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>tr(&quot;orderPrice&quot;)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>tr(&quot;orderStock&quot;)</string>
               </property>
              </item>
             </widget>
