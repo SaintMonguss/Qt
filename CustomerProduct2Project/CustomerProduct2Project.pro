@@ -10,22 +10,28 @@ CONFIG += c++17
 
 SOURCES += \
     Client.cpp \
-    Date.cpp \
     Order.cpp \
     Product.cpp \
+    clientmanager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    ordermanager.cpp \
+    productmanager.cpp
 
 HEADERS += \
     Client.h \
-    Date.h \
     Order.h \
     Product.h \
-    ProjectHeader.h \
-    mainwindow.h
+    clientmanager.h \
+    mainwindow.h \
+    ordermanager.h \
+    productmanager.h
 
 FORMS += \
-    mainwindow.ui
+    clientmanager.ui \
+    mainwindow.ui \
+    ordermanager.ui \
+    productmanager.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
