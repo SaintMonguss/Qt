@@ -2,6 +2,8 @@
 #define __CLIENT_H__
 
 #include <iostream>
+#include <QString>
+#include <QTableWidgetItem>
 
 using std::cout;
 using std::cin;
@@ -13,25 +15,25 @@ class Client
 {
 private:
 	const int m_id;
-	string m_name;
-	string m_phoneNumber;
-	string m_address;
-	string m_Email;
+    QString m_name;
+    QString m_phoneNumber;
+    QString m_address;
+    QString m_Email;
 
 public:
 	Client(const int id);
-	Client(int ,string, string, string, string);
+    Client(int ,QString, QString, QString, QString);
 	
 	int GetId() const;
-	string GetName() const;
-	string GetPhoneNumber() const;
-	string GetAddress() const;
-	string GetEmail() const;
+    QString GetName() const;
+    QString GetPhoneNumber() const;
+    QString GetAddress() const;
+    QString GetEmail() const;
 
-	void SetName(string );
-	void SetPhoneNumber(string );
-	void SetAddress(string );
-	void SetEmail(string );
+    void SetName(QString );
+    void SetPhoneNumber(QString );
+    void SetAddress(QString );
+    void SetEmail(QString );
 };
 
 #endif

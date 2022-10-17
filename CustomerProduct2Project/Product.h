@@ -2,6 +2,7 @@
 #define __PRODUCT_H__
 
 #include <iostream>
+#include <QString>
 
 using std::cout;
 using std::cin;
@@ -13,23 +14,23 @@ class Product
 {
 private:
 	const int m_id;
-	string m_name;
-	string m_brand;
+    QString m_name;
+    QString m_brand;
 	int m_price;
 	int m_stock;
 
 public:
 	Product(const int id);
-	Product(int, string, string, int, int);
+    Product(int, QString, QString, int, int);
 
-	string GetName() const;
-	string GetBrand() const;
+    QString GetName() const;
+    QString GetBrand() const;
 	int GetPrice() const;
 	int GetStock() const;
 	int GetId() const;
 
-	void SetName(string);
-	void SetBrand(string);
+    void SetName(QString);
+    void SetBrand(QString);
 	void SetPrice(int);
 	void SetStock(int);
 };
