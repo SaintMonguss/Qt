@@ -31,12 +31,12 @@ public:
     //    std::vector<QString> parseCSV(std::istream& , char);
 
 public slots:
-    void AddObj(QString, QString, QString, QString);
+    void AddObj();
     void DelObj(int );
     void ModiObj(int , QString , QString , QString , QString);
-    void SerchObj();
-    void PrintObj();
-    Client TossObj(int);
+    void SerchObj(int );
+    void SerchObj(QString , QString);
+    Client* TossObj(int);
 
 private:
     Ui::ClientManager *ui;

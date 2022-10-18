@@ -14,14 +14,14 @@ using std::string;
 class Client : public QTreeWidgetItem
 {
 private:
-	const int m_id;
+    int m_id;
     QString m_name;
     QString m_phoneNumber;
     QString m_address;
     QString m_Email;
 
 public:
-	Client(const int id);
+    Client(const int id);
     Client(int ,QString, QString, QString, QString);
 	
 	int GetId() const;
@@ -34,6 +34,8 @@ public:
     void SetPhoneNumber(QString );
     void SetAddress(QString );
     void SetEmail(QString );
+
+    bool operator==(const Client &other) const;
 };
 
 #endif

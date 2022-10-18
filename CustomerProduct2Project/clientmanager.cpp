@@ -1,10 +1,11 @@
 #include <iostream>
-#include <string>
+#include <QString>
 #include <iomanip>
 #include <stdio.h>
 #include <windows.h>
 #include <QDebug>
 #include <QFile>
+#include <QMap>
 
 
 #include "Client.h"
@@ -15,6 +16,12 @@ ClientManager::ClientManager(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ClientManager)
 {
+    ui->setupUi(this);
+
+    connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
+
+
+
     QFile file("clientlist.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -26,17 +33,17 @@ ClientManager::ClientManager(QWidget *parent) :
         if(row.size()) {
             int id = row[0].toInt();
             Client* c = new Client(id, row[1], row[2], row[3], row[4]);
-            //ui->treeWidget->addTopLevelItem(c);
+            ui -> clientTreeWidget ->addTopLevelItem(c);
             clientList.insert(id, c);
         }
     }
     file.close( );
-
-    ui->setupUi(this);
 }
 
 ClientManager::~ClientManager()
 {
+    delete ui;
+
     //파일 저장
     QFile file("clientlist.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -45,51 +52,48 @@ ClientManager::~ClientManager()
     QTextStream out(&file);
     for (const auto& v : clientList) {
         Client* c = v;
-        out << c->GetId() << ", " << c->GetName() << ", ";
+        out << QString::number(c->GetId()) << ", ";
+        out << c->GetName() << ", ";
         out << c->GetPhoneNumber() << ", ";
         out << c->GetAddress() << ", ";
         out << c->GetEmail() << "\n";
     }
     file.close( );
-    delete ui;
+
 }
 
 
 //고객 정보 추가
-void ClientManager::AddObj(QString name, QString phoneNumber, QString address, QString e_mail)
+void ClientManager::AddObj()
 {
     Client* client;
     int id;
 
     if (clientList.empty())
+    {
         id = 1;
+    }
     else
+    {
         id = (clientList.lastKey()) + 1; // lastkey 작동 방식 확인 필요
-    try
+    }
+    if(
+            ui -> clientInputNameText->text() != "" &&
+            ui -> clientInputPHText->text() != "" &&
+            ui -> clientInputAddressText->text() != "" &&
+            ui -> clientInputEmailText->text() != "")
     {
         client = new Client(id);
-    }
-    catch (const std::bad_alloc& e)
-    {
-        std::cout << "메모리 할당 실패";
+        client->SetName(ui -> clientInputNameText->text());
+        client->SetPhoneNumber(ui -> clientInputPHText -> text());
+        client->SetAddress(ui -> clientInputAddressText -> text());
+        client->SetEmail(ui -> clientInputEmailText -> text());
+        clientList.insert(id, client );
+        ui -> clientTreeWidget ->addTopLevelItem(client);
+        ui -> clientTreeWidget -> update();
         return;
     }
 
-    client->SetName(name);
-    client->SetPhoneNumber(phoneNumber);
-    client->SetAddress(address);
-    client->SetEmail(e_mail);
-    try
-    {
-        if (clientList.find(id) == clientList.end())
-            throw;
-        clientList.insert(id, client );
-    }
-    catch (...)
-    {
-        qDebug() <<"키 ID 중복 발생";
-        return;
-    }
     return;
 }
 
@@ -127,58 +131,72 @@ void ClientManager::ModiObj(int id ,QString name, QString phoneNumber, QString a
 }
 
 // 고객 정보 검색
-void ClientManager::SerchObj()
+void ClientManager::SerchObj(int id)
 {
-    string name;
-    map<int, Client*> serchList;
-
-    system("cls");
-
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << "                                                        고객 정보 검색" << std::endl;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << std::endl;
-
-    std::cout << "검색할 대상의 이름을 입력해 주세요 : ";
-    std::cin >> name;
-
     for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
     {
-        if (name == itr->second->GetName())
-            serchList[itr->first] = itr->second;
+        if (itr.key() != id)
+            itr.value()->setHidden(true);
+        else
+            itr.value()->setHidden(false);
     }
-    if (serchList.empty())
-    {
-        std::cout << "[" << name << "]" << " 의 검색 결과가 없습니다...";
-        Sleep(1500);
-        return;
-    }
-    system("cls");
-    printClientForm(serchList);
-    std::cout << std::endl;
-    std::cout << "[" << name << "]" << " 검색 결과" << std::endl;
-    std::cout << std::endl;
-    std::cout << "이전 화면으로 돌아가려면 enter를 입력해 주세요...";
-    while (getchar() != '\n');
-    getchar(); // 제어 흐름 정지
     return;
-
 }
 
-//고객 한명의 정보를 리턴하는 함수 / 반환값 any 형
-void* ClientManager::TossObj(int id)
+void ClientManager::SerchObj(QString target, QString value)
+{
+    if (target == "tr(\"name\")")
+        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
+        {
+            if (itr.value()->GetName() == value)
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"phoneNumber\")")
+        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
+        {
+            if (itr.value()->GetPhoneNumber() == value)
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"address\")")
+        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
+        {
+            if (itr.value()->GetAddress() == value)
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"E-mail\")")
+        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
+        {
+            if (itr.value()->GetEmail() == value)
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    return;
+}
+
+
+
+//고객 한명의 정보를 리턴하는 함수
+Client* ClientManager::TossObj(int id)
 {
     Client* client =nullptr;
     try
     {
-        client = clientList.at(id);
+        if(clientList.find(id) == clientList.end())
+            throw;
     }
-    catch (std::out_of_range e)
+    catch (...)
     {
-        std::cout << "해당하는 ID는 존재하지 않습니다!!" << std::endl;
-        Sleep(1000);
+        qDebug() << "해당하는 ID 없음";
+        return client;
     }
-
+    client = clientList.find(id).value();
     return client;
 }
 
