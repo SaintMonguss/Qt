@@ -2,11 +2,11 @@
 #include <QString>
 #include <iomanip>
 #include <stdio.h>
-#include <windows.h>
 #include <QDebug>
 #include <QFile>
 #include <QMap>
-
+#include <QMessageBox>
+#include <QMenu>
 
 #include "Client.h"
 #include "clientmanager.h"
@@ -20,6 +20,13 @@ ClientManager::ClientManager(QWidget *parent) :
 
     connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
 
+    QAction* removeAction = new QAction(tr("&Remove"));
+    connect(removeAction, SIGNAL(triggered()), SLOT(DelObj()));
+
+    menu = new QMenu;
+    menu->addAction(removeAction);
+    ui->clientTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->clientTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
 
     QFile file("clientlist.txt");
@@ -59,7 +66,6 @@ ClientManager::~ClientManager()
         out << c->GetEmail() << "\n";
     }
     file.close( );
-
 }
 
 
@@ -68,6 +74,12 @@ void ClientManager::AddObj()
 {
     Client* client;
     int id;
+
+    if(ui -> clientInputIDText->text() != "")
+    {
+        QMessageBox::information(this, "ID 입력 금지", "신규 고객 등록시에는 ID 입력 금지");
+        return;
+    }
 
     if (clientList.empty())
     {
@@ -93,19 +105,26 @@ void ClientManager::AddObj()
         ui -> clientTreeWidget -> update();
         return;
     }
+    ui -> clientInputNameText-> clear();
+    ui -> clientInputPHText -> clear();
+    ui -> clientInputAddressText -> clear();
+    ui -> clientInputEmailText -> clear();
 
     return;
 }
 
 // 고객 정보 삭제
-void ClientManager::DelObj(int id)
+void ClientManager::DelObj()
 {
-    if(clientList.find(id) == clientList.end())
-    {
-        qDebug() << "해당하는 ID는 존재하지 않음";
+    qDebug() << "요ㅇ기";
+    QTreeWidgetItem* item = ui->clientTreeWidget->currentItem();
+    if(item != nullptr) {
+        clientList.remove(item->text(0).toInt());
+        ui->clientTreeWidget->takeTopLevelItem(ui->clientTreeWidget->indexOfTopLevelItem(item));
+//        delete item;
+        ui->clientTreeWidget->update();
         return;
     }
-    clientList.remove(id);
 }
 
 // 고객 정보 수정
@@ -198,6 +217,24 @@ Client* ClientManager::TossObj(int id)
     }
     client = clientList.find(id).value();
     return client;
+}
+//선택시 메뉴 열리기
+
+void ClientManager::showContextMenu(const QPoint &pos)
+{
+    QPoint globalPos = ui->clientTreeWidget->mapToGlobal(pos);
+    menu->exec(globalPos);
+}
+
+//선택한 항목 속성 값 라인에디터에 표시
+void ClientManager::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(column);
+    ui->clientInputIDText->setText(item->text(0));
+    ui->clientInputNameText->setText(item->text(1));
+    ui->clientInputPHText->setText(item->text(2));
+    ui->clientInputAddressText->setText(item->text(3));
+    ui->clientInputEmailText->setText(item->text(4));
 }
 
 //std::vector<QString> ClientManager::parseCSV(std::istream& file, char delimiter)

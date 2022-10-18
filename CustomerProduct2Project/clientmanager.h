@@ -31,8 +31,10 @@ public:
     //    std::vector<QString> parseCSV(std::istream& , char);
 
 public slots:
+    void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
+    void showContextMenu(const QPoint &);
     void AddObj();
-    void DelObj(int );
+    void DelObj();
     void ModiObj(int , QString , QString , QString , QString);
     void SerchObj(int );
     void SerchObj(QString , QString);
@@ -41,6 +43,7 @@ public slots:
 private:
     Ui::ClientManager *ui;
     QMap<int, Client*> clientList;
+    QMenu* menu;
 };
 
 #endif // CLIENTMANAGER_H
