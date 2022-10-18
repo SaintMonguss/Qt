@@ -18,7 +18,7 @@ ClientManager::ClientManager(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
+
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(DelObj()));
@@ -26,14 +26,17 @@ ClientManager::ClientManager(QWidget *parent) :
     menu = new QMenu;
     menu->addAction(removeAction);
     ui->clientTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->clientTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
+    connect(ui-> clientTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui -> clientModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
+    connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
 
     QFile file("clientlist.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
     QTextStream in(&file);
+    idHistory = in.readLine().toInt(); // 아이디 히스토리 유지
     while (!in.atEnd()) {
         QString line = in.readLine();
         QList<QString> row = line.split(", ");
@@ -57,6 +60,7 @@ ClientManager::~ClientManager()
         return;
 
     QTextStream out(&file);
+    out << idHistory << "\n";
     for (const auto& v : clientList) {
         Client* c = v;
         out << QString::number(c->GetId()) << ", ";
@@ -83,11 +87,12 @@ void ClientManager::AddObj()
 
     if (clientList.empty())
     {
-        id = 1;
+        idHistory  = id = 1;
     }
     else
     {
-        id = (clientList.lastKey()) + 1; // lastkey 작동 방식 확인 필요
+        id = idHistory + 1;
+        idHistory += 1;
     }
     if(
             ui -> clientInputNameText->text() != "" &&
@@ -105,6 +110,7 @@ void ClientManager::AddObj()
         ui -> clientTreeWidget -> update();
         return;
     }
+
     ui -> clientInputNameText-> clear();
     ui -> clientInputPHText -> clear();
     ui -> clientInputAddressText -> clear();
@@ -116,7 +122,6 @@ void ClientManager::AddObj()
 // 고객 정보 삭제
 void ClientManager::DelObj()
 {
-    qDebug() << "요ㅇ기";
     QTreeWidgetItem* item = ui->clientTreeWidget->currentItem();
     if(item != nullptr) {
         clientList.remove(item->text(0).toInt());
@@ -128,25 +133,35 @@ void ClientManager::DelObj()
 }
 
 // 고객 정보 수정
-void ClientManager::ModiObj(int id ,QString name, QString phoneNumber, QString address, QString e_mail)
+void ClientManager::ModiObj()
 {
+    int id;
     Client* client;
-    try
+    if(
+            ui -> clientInputIDText->text() != "" &&
+            ui -> clientInputNameText->text() != "" &&
+            ui -> clientInputPHText->text() != "" &&
+            ui -> clientInputAddressText->text() != "" &&
+            ui -> clientInputEmailText->text() != "")
     {
+        id = (ui -> clientInputIDText->text()).toInt();
         if(clientList.find(id) == clientList.end())
-            throw;
-    }
-    catch (...)
-    {
-        qDebug() << "해당하는 ID 없음";
+        {
+            QMessageBox::information(this, "안내", "해당 하는 ID의 고객 정보가 없습니다.");
+            return;
+        }
+
+        client = clientList.find(id).value();			// 찾아서 클라이언트 객체를 할당
+        client->SetName(ui -> clientInputNameText->text());
+        client->SetPhoneNumber(ui -> clientInputPHText->text());
+        client->SetAddress(ui -> clientInputAddressText->text());
+        client->SetEmail(ui -> clientInputEmailText->text());
         return;
     }
-    client = clientList.find(id).value();			// 찾아서 클라이언트 객체를 할당
-    client->SetName(name);
-    client->SetPhoneNumber(phoneNumber);
-    client->SetAddress(address);
-    client->SetEmail(e_mail);
+    else
+        QMessageBox::information(this, "안내", "수정 하고자 하는 고객의 모든 정보를 입력해 주세요.");
     return;
+
 }
 
 // 고객 정보 검색
@@ -227,7 +242,7 @@ void ClientManager::showContextMenu(const QPoint &pos)
 }
 
 //선택한 항목 속성 값 라인에디터에 표시
-void ClientManager::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void ClientManager::on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
     ui->clientInputIDText->setText(item->text(0));
@@ -236,27 +251,3 @@ void ClientManager::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
     ui->clientInputAddressText->setText(item->text(3));
     ui->clientInputEmailText->setText(item->text(4));
 }
-
-//std::vector<QString> ClientManager::parseCSV(std::istream& file, char delimiter)
-//{
-//    std::stringstream ss;
-//    std::vector<QString> row;
-//    string t = " \n\r\t";
-
-//    while (!file.eof()) {
-//        char c = file.get();
-//        if (c == delimiter || c == '\r' || c == '\n') {
-//            if (file.peek() == '\n') file.get();
-//            string s = ss.str();
-//            s.erase(0, s.find_first_not_of(t));
-//            s.erase(s.find_last_not_of(t) + 1);
-//            row.push_back(s);
-//            ss.str("");
-//            if (c != delimiter) break;
-//        }
-//        else {
-//            ss << c;
-//        }
-//    }
-//    return row;
-//}
