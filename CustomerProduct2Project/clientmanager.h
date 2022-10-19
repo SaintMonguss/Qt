@@ -35,8 +35,7 @@ public slots:
     void AddObj();
     void DelObj();
     void ModiObj();
-    void SerchObj(int );
-    void SerchObj(QString , QString);
+    void SearchObj( );
     Client* TossObj(int);
 
 private slots:

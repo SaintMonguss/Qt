@@ -10,7 +10,6 @@ using std::cin;
 using std::string;
 
 
-
 class Client : public QTreeWidgetItem
 {
 private:

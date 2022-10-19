@@ -28,6 +28,7 @@ ClientManager::ClientManager(QWidget *parent) :
     ui->clientTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui-> clientTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui -> clientSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> clientModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
 
@@ -165,24 +166,21 @@ void ClientManager::ModiObj()
 }
 
 // 고객 정보 검색
-void ClientManager::SerchObj(int id)
-{
-    for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-    {
-        if (itr.key() != id)
-            itr.value()->setHidden(true);
-        else
-            itr.value()->setHidden(false);
-    }
-    return;
-}
-
-void ClientManager::SerchObj(QString target, QString value)
-{
+void ClientManager::SearchObj()
+{;
+    QString target = ui-> clientComboBox->currentText();
+    if (target == "tr(\"ID\")")
+        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
+        {
+            if (itr.value()->GetId() == ui->clientSearchIDText->text().toInt())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
     if (target == "tr(\"name\")")
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetName() == value)
+            if (itr.value()->GetName() == ui->clientSearchNameText->text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
@@ -190,7 +188,7 @@ void ClientManager::SerchObj(QString target, QString value)
     if (target == "tr(\"phoneNumber\")")
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetPhoneNumber() == value)
+            if (itr.value()->GetPhoneNumber() == ui->clientSearchPHText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
@@ -198,7 +196,7 @@ void ClientManager::SerchObj(QString target, QString value)
     if (target == "tr(\"address\")")
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetAddress() == value)
+            if (itr.value()->GetAddress() == ui -> clientSearchAddressText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
@@ -206,7 +204,7 @@ void ClientManager::SerchObj(QString target, QString value)
     if (target == "tr(\"E-mail\")")
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetEmail() == value)
+            if (itr.value()->GetEmail() == ui -> clientSearchEmailText ->text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);

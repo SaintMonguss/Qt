@@ -112,7 +112,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_3">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_2">
         <attribute name="title">
@@ -282,7 +282,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_2">
+          <widget class="QComboBox" name="clientComboBox">
            <item>
             <property name="text">
              <string>tr(&quot;name&quot;)</string>
@@ -347,7 +347,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_16">
+              <widget class="QLineEdit" name="clientSearchIDText">
                <property name="readOnly">
                 <bool>false</bool>
                </property>
@@ -369,7 +369,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_17"/>
+            <widget class="QLineEdit" name="clientSearchNameText"/>
            </item>
           </layout>
          </item>
@@ -389,7 +389,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_18"/>
+            <widget class="QLineEdit" name="clientSearchPHText"/>
            </item>
           </layout>
          </item>
@@ -409,7 +409,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_19"/>
+            <widget class="QLineEdit" name="clientSearchAddressText"/>
            </item>
           </layout>
          </item>
@@ -429,7 +429,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_20"/>
+            <widget class="QLineEdit" name="clientSearchEmailText"/>
            </item>
           </layout>
          </item>
@@ -492,7 +492,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="clientSearchButton">
            <property name="text">
             <string>tr(&quot;search&quot;)</string>
            </property>
