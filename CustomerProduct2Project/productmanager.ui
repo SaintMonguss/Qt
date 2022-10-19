@@ -32,7 +32,7 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QTreeWidget" name="treeWidget_2">
+      <widget class="QTreeWidget" name="productTreeWidget">
        <column>
         <property name="text">
          <string>tr(&quot;ID&quot;)</string>
@@ -139,7 +139,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_12">
+                <widget class="QLineEdit" name="productInputIDText">
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -161,7 +161,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_11"/>
+              <widget class="QLineEdit" name="productInputNameText"/>
              </item>
             </layout>
            </item>
@@ -181,7 +181,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_13"/>
+              <widget class="QLineEdit" name="productInputBrandText"/>
              </item>
             </layout>
            </item>
@@ -201,7 +201,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_14"/>
+              <widget class="QLineEdit" name="productInputPriceText"/>
              </item>
             </layout>
            </item>
@@ -221,7 +221,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_15"/>
+              <widget class="QLineEdit" name="ProductInputStockText"/>
              </item>
             </layout>
            </item>
@@ -244,7 +244,7 @@
               <enum>QLayout::SetNoConstraint</enum>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton_4">
+              <widget class="QPushButton" name="productInputConfirmButton">
                <property name="text">
                 <string>tr(&quot;change&quot;)</string>
                </property>
@@ -267,7 +267,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="productModifyButton">
                <property name="text">
                 <string>tr(&quot;add&quot;)</string>
                </property>
@@ -294,7 +294,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_2">
+            <widget class="QComboBox" name="productComboBox">
              <item>
               <property name="text">
                <string>tr(&quot;name&quot;)</string>
@@ -359,7 +359,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_17">
+                <widget class="QLineEdit" name="productSeacrhIDText">
                  <property name="readOnly">
                   <bool>false</bool>
                  </property>
@@ -381,7 +381,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_16"/>
+              <widget class="QLineEdit" name="productSearchNameText"/>
              </item>
             </layout>
            </item>
@@ -401,7 +401,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_18"/>
+              <widget class="QLineEdit" name="productSearchBrandText"/>
              </item>
             </layout>
            </item>
@@ -421,7 +421,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_19"/>
+              <widget class="QLineEdit" name="productSearchPriceText"/>
              </item>
             </layout>
            </item>
@@ -441,7 +441,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_20"/>
+              <widget class="QLineEdit" name="productSearchStockText"/>
              </item>
             </layout>
            </item>
@@ -462,7 +462,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_6">
+            <widget class="QPushButton" name="productSearchButton">
              <property name="text">
               <string>tr(&quot;search&quot;)</string>
              </property>
