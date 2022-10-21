@@ -19,8 +19,14 @@ using std::cin;
 using std::string;
 using std::map;
 
-class OrderManager : QWidget
+namespace Ui {
+class OrderManager;
+}
+
+class OrderManager : public QWidget
 {
+        Q_OBJECT
+
 private:
     QMap<int, Order*> orderList;
     ClientManager* CM;
@@ -30,18 +36,18 @@ public:
     OrderManager(ClientManager*, ProductManager*);
     ~OrderManager();
 
-private slots:
-    void on_productTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
-    void resetSearchResult();
+//private slots:
+//    void on_productTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
+//    void resetSearchResult();
 
-public slots:
-    void AddObj();
-    void DelObj();
-    void ModiObj();
-    void SerchObj();
-    void PrintObj();
-    void TossObj(int);
-    void printOrderForm(QMap<int, Order*> &) const;
+//public slots:
+//    void AddObj();
+//    void DelObj();
+//    void ModiObj();
+//    void SerchObj();
+//    void PrintObj();
+//    void TossObj(int);
+//    void printOrderForm(QMap<int, Order*> &) const;
 };
 
 #endif // ORDERMANAGER_H

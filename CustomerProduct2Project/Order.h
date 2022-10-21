@@ -13,11 +13,11 @@ using std::string;
 class Order : public QTreeWidgetItem
 {
 private:
-    const int m_orderId;		// 주문의 식별 번호
+    const int m_orderId;
     QString m_productName;
     QString m_clientName;
     int m_date;
-    int m_clientId;// 구매자 식별 번호
+    int m_clientId;
     int m_orderPrice;
     int m_orderStock;
 
