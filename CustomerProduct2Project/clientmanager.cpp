@@ -16,9 +16,8 @@ ClientManager::ClientManager(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ClientManager)
 {
+
     ui->setupUi(this);
-
-
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(DelObj()));
@@ -31,6 +30,7 @@ ClientManager::ClientManager(QWidget *parent) :
     connect(ui -> clientSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> clientModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
+    connect(ui -> clientResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
 
     QFile file("clientlist.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -248,4 +248,17 @@ void ClientManager::on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int c
     ui->clientInputPHText->setText(item->text(2));
     ui->clientInputAddressText->setText(item->text(3));
     ui->clientInputEmailText->setText(item->text(4));
+}
+
+void ClientManager::resetSearchResult()
+{
+    ui -> clientSearchIDText-> clear();
+    ui -> clientSearchNameText -> clear();
+    ui -> clientSearchPHText -> clear();
+    ui -> clientSearchAddressText -> clear();
+    ui -> clientSearchEmailText -> clear();
+    for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
+    {
+        itr.value()->setHidden(false);
+    }
 }

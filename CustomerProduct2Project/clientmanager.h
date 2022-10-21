@@ -24,11 +24,19 @@ class ClientManager : public QWidget
 {
     Q_OBJECT
 
+private:
+    int idHistory;
+    Ui::ClientManager *ui;
+    QMap<int, Client*> clientList;
+    QMenu* menu;
+
 public:
     explicit ClientManager(QWidget *parent = nullptr);
     ~ClientManager();
 
-    //    std::vector<QString> parseCSV(std::istream& , char);
+private slots:
+    void on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
+    void resetSearchResult();
 
 public slots:
     void showContextMenu(const QPoint &);
@@ -37,15 +45,6 @@ public slots:
     void ModiObj();
     void SearchObj( );
     Client* TossObj(int);
-
-private slots:
-    void on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
-
-private:
-    int idHistory;
-    Ui::ClientManager *ui;
-    QMap<int, Client*> clientList;
-    QMenu* menu;
 };
 
 #endif // CLIENTMANAGER_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>729</width>
-    <height>367</height>
+    <width>520</width>
+    <height>405</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,7 +141,7 @@
                <item>
                 <widget class="QLineEdit" name="productInputIDText">
                  <property name="readOnly">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>
@@ -221,7 +221,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="ProductInputStockText"/>
+              <widget class="QLineEdit" name="productInputStockText"/>
              </item>
             </layout>
            </item>
@@ -246,7 +246,7 @@
              <item>
               <widget class="QPushButton" name="productInputConfirmButton">
                <property name="text">
-                <string>tr(&quot;change&quot;)</string>
+                <string>tr(&quot;confirm&quot;)</string>
                </property>
               </widget>
              </item>
@@ -269,7 +269,7 @@
              <item>
               <widget class="QPushButton" name="productModifyButton">
                <property name="text">
-                <string>tr(&quot;add&quot;)</string>
+                <string>tr(&quot;modify&quot;)</string>
                </property>
               </widget>
              </item>
@@ -283,192 +283,230 @@
         <attribute name="title">
          <string>검색</string>
         </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_20">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>tr(&quot;searchElements&quot;)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="productComboBox">
            <item>
-            <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>tr(&quot;name&quot;)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>tr(&quot;ID&quot;)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>tr(&quot;brand&quot;)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>tr(&quot;price&quot;)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>tr(&quot;stock&quot;)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>13</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_21">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_22">
+             <item>
+              <widget class="QLabel" name="label_19">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>tr(&quot;ID&quot;)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="productSearchIDText">
+               <property name="readOnly">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_18">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string>tr(&quot;searchElements&quot;)</string>
+              <string>tr(&quot;name&quot;)</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="productComboBox">
-             <item>
-              <property name="text">
-               <string>tr(&quot;name&quot;)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>tr(&quot;ID&quot;)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>tr(&quot;brand&quot;)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>tr(&quot;price&quot;)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>tr(&quot;stock&quot;)</string>
-              </property>
-             </item>
+            <widget class="QLineEdit" name="productSearchNameText"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_23">
+           <item>
+            <widget class="QLabel" name="label_20">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>tr(&quot;brand&quot;)</string>
+             </property>
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_5">
+            <widget class="QLineEdit" name="productSearchBrandText"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_24">
+           <item>
+            <widget class="QLabel" name="label_21">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>tr(&quot;price&quot;)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="productSearchPriceText"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_25">
+           <item>
+            <widget class="QLabel" name="label_22">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>tr(&quot;stock&quot;)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="productSearchStockText"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <spacer name="horizontalSpacer">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
-               <height>10</height>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_21">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetDefaultConstraint</enum>
+            <widget class="QPushButton" name="productResetButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_22">
-               <item>
-                <widget class="QLabel" name="label_19">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>tr(&quot;ID&quot;)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="productSeacrhIDText">
-                 <property name="readOnly">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_18">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>tr(&quot;name&quot;)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="productSearchNameText"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_23">
-             <item>
-              <widget class="QLabel" name="label_20">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>tr(&quot;brand&quot;)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="productSearchBrandText"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_24">
-             <item>
-              <widget class="QLabel" name="label_21">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>tr(&quot;price&quot;)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="productSearchPriceText"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_25">
-             <item>
-              <widget class="QLabel" name="label_22">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>tr(&quot;stock&quot;)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="productSearchStockText"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
+             <property name="minimumSize">
               <size>
-               <width>20</width>
-               <height>40</height>
+               <width>30</width>
+               <height>30</height>
               </size>
              </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="productSearchButton">
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
-              <string>tr(&quot;search&quot;)</string>
+              <string>PushButton</string>
              </property>
             </widget>
            </item>
           </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="productSearchButton">
+           <property name="text">
+            <string>tr(&quot;search&quot;)</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
