@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>753</width>
-    <height>489</height>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -165,29 +165,6 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_51">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetDefaultConstraint</enum>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_45">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>tr(&quot;clientName&quot;)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="orderInputClientNameText"/>
-             </item>
-            </layout>
-           </item>
-           <item>
             <layout class="QVBoxLayout" name="verticalLayout_53">
              <item>
               <widget class="QLabel" name="label_47">
@@ -244,26 +221,6 @@
              </item>
              <item>
               <widget class="QLineEdit" name="orderInputDateText"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_62">
-             <item>
-              <widget class="QLabel" name="label_56">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>tr(&quot;orderPrice&quot;)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="orderInputOrderPriceText"/>
              </item>
             </layout>
            </item>
