@@ -1,4 +1,5 @@
 #include "ordermanager.h"
+#include "ui_clientmanager.h"
 #include "ui_ordermanager.h"
 
 #include <iostream>
@@ -9,12 +10,26 @@
 #include <QFile>
 #include <QMap>
 #include <QMessageBox>
+#include <QMenu>
 
 // 생성자 파일 불러오기
 OrderManager::OrderManager(ClientManager* CM, ProductManager* PM) : CM(CM), PM(PM) ,
     ui(new Ui::OrderManager)
 {
     ui->setupUi(this);
+
+    QAction* removeAction = new QAction(tr("&Remove"));
+    connect(removeAction, SIGNAL(triggered()), SLOT(DelObj()));
+
+    menu = new QMenu;
+    menu -> addAction(removeAction);
+    ui -> orderTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(ui -> orderTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
+    connect(ui -> orderModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
+    connect(ui -> orderInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
+    connect(ui -> orderResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
 
     QFile file("orderlist.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -77,37 +92,50 @@ void OrderManager::AddObj()
         QMessageBox::information(this, "ID 입력 금지", "신규 주문 등록시에는 ID 입력 금지");
         return;
     }
-
-    if (orderList.empty())
-    {
-        idHistory  = id = 1;
-    }
-    else
-    {
-        id = idHistory + 1;
-        idHistory += 1;
-    }
     if(
             ui -> orderInputClientIdText->text() != "" &&
             ui -> orderInputProductNameText->text() != "" &&
             ui -> orderInputDateText->text() != "" &&
-            ui -> orderInputOrderStockText->text() != "")
+            ui -> orderInputOrderPriceText->text() != "" &&
+            ui -> orderInputOrderStockText->text() != ""
+            )
     {
-        client = new Client(id);
-        client->SetName(ui -> clientInputNameText->text());
-        client->SetPhoneNumber(ui -> clientInputPHText -> text());
-        client->SetAddress(ui -> clientInputAddressText -> text());
-        client->SetEmail(ui -> clientInputEmailText -> text());
-        clientList.insert(id, client );
-        ui -> clientTreeWidget ->addTopLevelItem(client);
-        ui -> clientTreeWidget -> update();
+        // 널 포인터 체크 - 존재하지 않는 고객 ID 입력시 널 포인트가 반환될 가능성
+        if(CM -> TossObj(ui -> orderInputClientIdText->text().toInt()) == nullptr )
+        {
+            QMessageBox::information(this, "안내", "해당 하는 ID의 고객이 없습니다.");
+            return;
+        }
+        if (orderList.empty())
+        {
+            idHistory  = id = 1;
+        }
+        else
+        {
+            id = idHistory + 1;
+            idHistory += 1;
+        }
+        order = new Order(id);
+        order -> SetClientId((ui -> orderInputClientIdText->text()).toInt());
+        order -> SetProductName(ui -> orderInputProductNameText->text());
+        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
+        order -> SetDate(ui -> orderInputDateText -> text().toInt());
+        order -> SetOrderPrice(ui -> orderInputOrderPriceText -> text().toInt());
+        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
+
+        order -> SetClientName(CM -> TossObj(order->GetClientId()) -> GetName());
+
+        orderList.insert(id, order);
+        ui -> orderTreeWidget ->addTopLevelItem(order);
+        ui -> orderTreeWidget -> update();
         return;
     }
-
-    ui -> clientInputNameText-> clear();
-    ui -> clientInputPHText -> clear();
-    ui -> clientInputAddressText -> clear();
-    ui -> clientInputEmailText -> clear();
+    ui -> orderInputClientIdText-> clear();
+    ui -> orderInputProductNameText -> clear();
+    ui -> orderInputOrderStockText -> clear();
+    ui -> orderInputOrderPriceText -> clear();
+    ui -> orderInputOrderStockText -> clear();
+    ui -> orderInputDateText -> clear();
 
     return;
 }
@@ -115,49 +143,14 @@ void OrderManager::AddObj()
 // 주문 정보 삭제
 void OrderManager::DelObj()
 {
-    int id;
-    char check;
-    Order *order;
-
-    system("cls");
-    printOrderForm(orderList);
-    std::cout << std::endl;;
-    std::cout << std::endl;;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << "                                                          주문 이력 삭제" << std::endl;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-
-    std::cout << std::endl;
-    std::cout << "뒤로 가고 싶다면 -1 입력" << std::endl << std::endl;
-    std::cout << "삭제할 주문의 ID를 입력 해주세요 : ";
-    id = InputFormat::IntCin();
-    if (id == -1)
-        return;
-    try
-    {
-        orderList.at(id);
-    }
-    catch (std::out_of_range e)
-    {
-        std::cout << "해당하는 주문 ID는 존재하지 않습니다!!" << std::endl;
-        Sleep(1000);
+    QTreeWidgetItem* item = ui->orderTreeWidget->currentItem();
+    if(item != nullptr) {
+        orderList.remove(item->text(0).toInt());
+        ui->orderTreeWidget->takeTopLevelItem(ui->orderTreeWidget->indexOfTopLevelItem(item));
+        //        delete item;
+        ui->orderTreeWidget->update();
         return;
     }
-    order = orderList.find(id)->second;					// 찾아서 클라이언트 객체를 할당
-    std::cout << "[" << order->GetOrderId() << "]" << " 번 주문 이력을 삭제 하시겠습니까?" << std::endl;
-    do
-    {
-        cin.ignore(999, '\n');							//버퍼 청소
-        std::cout << "[ Y / N ] : ";
-        std::cin >> check;
-        check = toupper(check);							// 대문자 전환
-    } while ((check != 'Y') && (check != 'N'));
-    if (check == 'N')
-        return;
-    orderList.erase(id);
-    std::cout << "[" << order->GetOrderId() << "]" << " 번 주문 이력을 삭제했습니다" << std::endl;
-    Sleep(1500);
-    system("cls");
 }
 
 
@@ -166,211 +159,147 @@ void OrderManager::ModiObj()
 {
     int id;
     int num;
-    Date date;
     Order* order;
-    string tmp;
 
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << "                                                       주문 이력 수정" << std::endl;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << std::endl;
-    std::cout << "수정할 수 있는 항목은 주문 수량과 날짜입니다.";
-    std::cout << std::endl;
-    std::cout << "뒤로 가고 싶다면 -1 입력" << std::endl << std::endl;
-    std::cout << "수정할 주문의 ID를 입력 해주세요 : ";
-    id = InputFormat::IntCin();
-    if (id == -1)
+    if(
+            ui -> orderInputClientIdText->text() != "" &&
+            ui -> orderInputProductNameText->text() != "" &&
+            ui -> orderInputDateText->text() != "" &&
+            ui -> orderInputOrderPriceText->text() != "" &&
+            ui -> orderInputOrderStockText->text() != "")
+    {
+        id = (ui -> orderInputIdText->text()).toInt();
+        if(orderList.find(id) == orderList.end())
+        {
+            QMessageBox::information(this, "안내", "해당 하는 ID의 주문 정보가 없습니다.");
+            return;
+        }
+        // 널 포인터 체크 - 존재하지 않는 고객 ID 입력시 널 포인트가 반환될 가능성
+        if(CM -> TossObj(ui -> orderInputClientIdText->text().toInt()) == nullptr )
+        {
+            QMessageBox::information(this, "안내", "수정하고자하는 ID의 고객이 없습니다.");
+            return;
+        }
+        order = orderList.find(id).value();			// 찾아서 클라이언트 객체를 할당
+        order -> SetClientId((ui -> orderInputClientIdText->text()).toInt());
+        order -> SetProductName(ui -> orderInputProductNameText->text());
+        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
+        order -> SetDate(ui -> orderInputDateText -> text().toInt());
+        order -> SetOrderPrice(ui -> orderInputOrderPriceText -> text().toInt());
+        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
+        order -> SetClientName(CM -> TossObj(order->GetClientId()) -> GetName());
         return;
-    try
-    {
-        orderList.at(id);
     }
-    catch (std::out_of_range e)
-    {
-        std::cout << "해당하는 ID는 존재하지 않습니다!!" << std::endl;
-        Sleep(1000);
-        return;
-    }
-    order = orderList.find(id)->second;					// 찾아서 클라이언트 객체를 할당
-    std::cout << "현재 수량 : [ " << order->GetOrderStock() << " ]" << std::endl;
-    std::cout << "수정할 수량 : ";
-    num = InputFormat::IntCin();
-    order->SetOrderStock(num);
-    std::cout << "현재 날짜 : [ "
-        << order->GetDate().GetYear()<< "년 "
-        << order->GetDate().GetMonth() << "월 "
-        << order->GetDate().GetDay() << "일"
-        << "]" << std::endl;
-    do
-    {
-        std::cout << "수정할 날자 [년] (yyyy) : ";
-        num = InputFormat::IntCin();
-    } while (!date.SetYear(num));
-    do
-    {
-        std::cout << "주문 날자 [월] (mm): ";
-        num = InputFormat::IntCin();
-    } while (!date.SetMonth(num));
-    do
-    {
-        std::cout << "주문 날자 [일] (dd): ";
-        num = InputFormat::IntCin();
-    } while (!date.SetDay(num));
-    order->SetDate(date);
-
-    std::cout << "주문 정보 수정 완료";
-    Sleep(1500);
-    system("cls");
+    else
+        QMessageBox::information(this, "안내", "수정하고자 하는 주문 내역을 모두 입력해 주세요.");
+    return;
 }
 
 // 주문 정보 검색
 void OrderManager::SerchObj()
 {
-    int id;
-    map<int, Order*> serchList;
-
-    system("cls");
-
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << "                                                          주문 이력 검색" << std::endl;
-    std::cout << "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" << std::endl;
-    std::cout << std::endl;
-    std::cout << "뒤로 가고 싶다면 -1 입력" << std::endl << std::endl;
-    std::cout << "검색할 이력의 구매자 ID를 입력해 주세요 : ";
-    id = InputFormat::IntCin();
-    if (id == -1)
-        return;
-    for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-    {
-        if (id == itr->second->GetClientId())
-            serchList[itr->first] = itr->second;
-    }
-    if (serchList.empty())
-    {
-        std::cout << "[" << id << "]" << " 고객의 주문 이력이 없습니다...";
-        Sleep(1500);
-        return;
-    }
-    system("cls");
-    printOrderForm(serchList);
-    std::cout << std::endl;
-    std::cout << "[" << id << "]" << " 주문 이력 검색 결과" << std::endl;
-    std::cout << std::endl;
-    std::cout << "이전 화면으로 돌아가려면 enter를 입력해 주세요...";
-    while (getchar() != '\n');
-    getchar();										// 제어 흐름 정지
+    QString target = ui -> orderComboBox -> currentText();
+    if (target == "tr(\"orderID\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()-> GetOrderId() == ui-> orderSearchOrderIdText -> text().toInt())
+                itr.value()-> setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"clientName\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()->GetClientName() == ui -> orderSearchclientNameText -> text())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"clientID\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()->GetClientId() == ui -> orderSearchclientIdText -> text().toInt())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"productName\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()->GetProductName() == ui -> orderSearchProductNameText -> text())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"date\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()->GetDate() == ui -> orderSearchDateText ->text().toInt())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"orderPrice\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()->GetOrderPrice() == ui -> orderSearchOrderPriceText ->text().toInt())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
+    if (target == "tr(\"orderStock\")")
+        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+        {
+            if (itr.value()->GetOrderStock() == ui -> orderSearchOrderStockText ->text().toInt())
+                itr.value()->setHidden(false);
+            else
+                itr.value()->setHidden(true);
+        }
     return;
-
 }
 
-//주문 정보 조회
-void OrderManager::PrintObj()
-{
-    system("cls");
-    printOrderForm(orderList);
-    std::cout << std::endl;
-    std::cout << "이전 화면으로 돌아가려면 enter를 입력해 주세요...";
-    while (getchar() != '\n');
-    getchar();										// 제어 흐름 정지
-    return;
-}
-
-void* OrderManager::TossObj(int id)
+Order* OrderManager::TossObj(int id)
 {
     Order* order = nullptr;
-    try
+    if(orderList.find(id) == orderList.end())
     {
-        order = orderList.at(id);
-    }
-    catch (std::out_of_range e)
-    {
-        std::cout << "해당하는 ID는 존재하지 않습니다!!" << std::endl;
-        Sleep(1000);
+        QMessageBox::information(this, "안내", "해당 하는 ID의 주문 정보가 없습니다.");
+        return order;
     }
     return order;
 }
 
+//선택시 메뉴 열리기
 
-// 고객 관련 출력 템플릿
-void OrderManager::printOrderForm(map<int, Order*> &orderList) const
+void OrderManager::showContextMenu(const QPoint &pos)
 {
-    Order* order;
-    std::cout << "┌───────┬───────────────────┬──────────┬────────────────────────────────────────────┬────────┬──────────────────┬──────────────┐" << std::endl;;
-    std::cout << "│   ID          주문일        구매자 ID                      상품 이름                상품 ID         가격            수량     │" << std::endl;;
-    for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-    {
-        order = itr->second;
-        std::cout << "├───────┼───────────────────┼──────────┼────────────────────────────────────────────┼────────┼──────────────────┼──────────────┤" << std::endl;;
-        std::cout << "│ ";
-        ///////////////////// ID 칸 양식
-        cout.fill('0');
-        std::cout.width(O_ID_WIDTH);
-        std::cout << itr->first;
-        cout.fill(' ');								// 공간 채움을 공백으로 다시 변경
-        std::cout << " ";
-        ///////////////////// 날짜 양식
-        std::cout << "   ";
-        std::cout << order->GetDate().GetYear() << "년 ";
-        std::cout.width(2);
-        std::cout << order->GetDate().GetMonth();
-        std::cout << "월 ";
-        std::cout.width(2);
-        std::cout << order->GetDate().GetDay();
-        std::cout << "일";
-        std::cout << "  ";
-        ///////////////////// 구매자 아이디 양식
-        std::cout << "  ";
-        std::cout.width(O_CLIENTID_WIDTH);
-        cout.fill('0');
-        std::cout << order->GetClientId();
-        cout.fill(' ');								// 공간 채움을 공백으로 다시 변경
-        std::cout << "  ";
-        ///////////////////// 제품 명 양식
-        std::cout << "  ";
-        std::cout.width(O_PRODUCTNAME_WIDTH);
-        std::cout << order->GetProductName();
-        std::cout << " ";
-        ///////////////////// 제품 ID 양식
-        std::cout << "  ";
-        cout.fill('0');
-        std::cout.width(O_PRODUCTID_WIDTH);
-        std::cout << order->GetProductId();
-        cout.fill(' ');								// 공간 채움을 공백으로 다시 변경
-        std::cout << " ";
-        ///////////////////// 가격 양식
-        std::cout << "  ";
-        std::cout.width(O_PRICE_WIDTH);
-        std::cout << order->GetOrderPrice();
-        std::cout << " ";
-        ///////////////////// 수량 양식
-        std::cout.width(O_STOCK_WIDTH);
-        std::cout << order->GetOrderStock();
-        std::cout << " │" << std::endl;
-    }
-    std::cout << "└───────┴───────────────────┴──────────┴────────────────────────────────────────────┴────────┴──────────────────┴──────────────┘" << std::endl;;
-    return;
+    QPoint globalPos = ui->orderTreeWidget->mapToGlobal(pos);
+    menu -> exec(globalPos);
 }
 
-std::vector<string> OrderManager::parseCSV(std::istream& file, char delimiter)
+//선택한 항목 속성 값 라인에디터에 표시
+void OrderManager::on_orderTreeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
-    std::stringstream ss;
-    std::vector<string> row;
-    string t = " \n\r\t";
+    Q_UNUSED(column);
+    ui -> orderInputIdText -> setText(item->text(0));
+    ui -> orderInputProductNameText -> setText(item->text(1));
+    ui -> orderInputClientIdText -> setText(item->text(2));
+    ui -> orderInputDateText -> setText(item->text(3));
+    ui -> orderInputOrderPriceText -> setText(item->text(5));
+    ui -> orderInputOrderStockText -> setText(item->text(6));
+}
 
-    while (!file.eof()) {
-        char c = file.get();
-        if (c == delimiter || c == '\r' || c == '\n') {
-            if (file.peek() == '\n') file.get();
-            string s = ss.str();
-            s.erase(0, s.find_first_not_of(t));
-            s.erase(s.find_last_not_of(t) + 1);
-            row.push_back(s);
-            ss.str("");
-            if (c != delimiter) break;
-        }
-        else {
-            ss << c;
-        }
+void OrderManager::resetSearchResult()
+{
+    ui -> orderInputIdText -> clear();
+    ui -> orderInputProductNameText -> clear();
+    ui -> orderInputClientIdText -> clear();
+    ui -> orderInputDateText -> clear();
+    ui -> orderInputOrderPriceText -> clear();
+    ui -> orderInputOrderStockText -> clear();
+
+    for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
+    {
+        itr.value()->setHidden(false);
     }
-    return row;
 }

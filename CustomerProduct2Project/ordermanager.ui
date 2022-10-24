@@ -32,7 +32,7 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QTreeWidget" name="treeWidget_5">
+      <widget class="QTreeWidget" name="orderTreeWidget">
        <column>
         <property name="text">
          <string>tr(&quot;orderID&quot;)</string>
@@ -225,6 +225,26 @@
             </layout>
            </item>
            <item>
+            <layout class="QVBoxLayout" name="verticalLayout_66">
+             <item>
+              <widget class="QLabel" name="label_60">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>tr(&quot;orderPrice&quot;)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="orderInputOrderPriceText"/>
+             </item>
+            </layout>
+           </item>
+           <item>
             <layout class="QVBoxLayout" name="verticalLayout_63">
              <item>
               <widget class="QLabel" name="label_57">
@@ -263,7 +283,7 @@
               <enum>QLayout::SetNoConstraint</enum>
              </property>
              <item>
-              <widget class="QPushButton" name="orderInputConfrirmButton">
+              <widget class="QPushButton" name="orderInputConfirmButton">
                <property name="text">
                 <string>tr(&quot;confirm&quot;)</string>
                </property>
@@ -311,7 +331,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_5">
+          <widget class="QComboBox" name="orderComboBox">
            <item>
             <property name="text">
              <string>tr(&quot;orderID&quot;)</string>

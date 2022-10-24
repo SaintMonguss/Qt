@@ -25,10 +25,10 @@ class OrderManager;
 
 class OrderManager : public QWidget
 {
-        Q_OBJECT
+    Q_OBJECT
 
 private:
-
+    QMenu* menu;
     int idHistory;
     Ui::OrderManager *ui;
     QMap<int, Order*> orderList;
@@ -40,17 +40,16 @@ public:
     ~OrderManager();
 
 private slots:
-    void on_productTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
+    void on_orderTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
     void resetSearchResult();
 
 public slots:
+    void showContextMenu(const QPoint &);
     void AddObj();
     void DelObj();
     void ModiObj();
     void SerchObj();
-    void PrintObj();
-    void TossObj(int);
-    void printOrderForm(QMap<int, Order*> &) const;
+    Order* TossObj(int);
 };
 
 #endif // ORDERMANAGER_H
