@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QMessageBox>
 #include <QMenu>
+#include <QPixmap>
 
 #include "Product.h"
 #include "productmanager.h"

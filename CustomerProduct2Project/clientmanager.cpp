@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QMessageBox>
 #include <QMenu>
+#include <QPixmap>
 
 #include "Client.h"
 #include "clientmanager.h"

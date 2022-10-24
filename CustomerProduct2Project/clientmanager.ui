@@ -112,7 +112,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_3">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_2">
         <attribute name="title">
@@ -458,8 +458,8 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>30</width>
-               <height>30</height>
+               <width>50</width>
+               <height>50</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -469,7 +469,17 @@
               </size>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/eraser2.png</normaloff>:/images/eraser2.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>40</width>
+               <height>40</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -506,6 +516,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
