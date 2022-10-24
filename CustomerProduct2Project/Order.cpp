@@ -7,15 +7,15 @@ Order::Order(const int id) : m_orderId(id)
 {
     setText(0, QString::number(id));
 }
-Order::Order(const int id, QString productName, QString clientName, int date, int clientId, int orderPrice, int orderStock) :
+Order::Order(const int id, int clientId, QString clientName, QString productName, int date,  int orderPrice, int orderStock) :
     m_orderId(id), m_productName(productName), m_clientName(clientName), m_date(date), m_clientId(clientId),
     m_orderPrice(orderPrice), m_orderStock(orderStock)
 {
     setText(0, QString::number(id));
-    setText(1, productName);
+    setText(1, QString::number(clientId));
     setText(2, clientName);
-    setText(3, QString::number(date));
-    setText(4, QString::number(clientId));
+    setText(3, productName);
+    setText(4, QString::number(date));
     setText(5, QString::number(orderPrice));
     setText(6, QString::number(orderStock));
 }
@@ -54,7 +54,7 @@ QString Order::GetProductName() const
 void Order::SetProductName(QString productName)
 {
     m_productName = productName;
-    setText(1, productName);
+    setText(3, productName);
 }
 
 void Order::SetClientName(QString clientName)
@@ -66,13 +66,13 @@ void Order::SetClientName(QString clientName)
 void Order::SetDate(int date)
 {
     m_date = date;
-    setText(3, QString::number(date));
+    setText(4, QString::number(date));
 }
 
 void Order::SetClientId(int clientId)
 {
     m_clientId = clientId;
-    setText(4, QString::number(clientId));
+    setText(1, QString::number(clientId));
 }
 
 void Order::SetOrderPrice(int orderPrice)
@@ -83,7 +83,7 @@ void Order::SetOrderPrice(int orderPrice)
 void Order::SetOrderStock(int orderStock)
 {
     m_orderStock = orderStock;
-    setText(4, QString::number(orderStock));
+    setText(6, QString::number(orderStock));
 }
 
 

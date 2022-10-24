@@ -167,7 +167,7 @@ void ClientManager::ModiObj()
 
 // 고객 정보 검색
 void ClientManager::SearchObj()
-{;
+{
     QString target = ui-> clientComboBox->currentText();
     if (target == "tr(\"ID\")")
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
@@ -218,12 +218,7 @@ void ClientManager::SearchObj()
 Client* ClientManager::TossObj(int id)
 {
     Client* client =nullptr;
-    try
-    {
-        if(clientList.find(id) == clientList.end())
-            throw;
-    }
-    catch (...)
+    if(clientList.find(id) == clientList.end())
     {
         qDebug() << "해당하는 ID 없음";
         return client;

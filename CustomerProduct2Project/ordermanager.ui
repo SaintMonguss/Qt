@@ -46,7 +46,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;clientName&quot;)</string>
+         <string>tr(&quot;clientID&quot;)</string>
         </property>
         <property name="font">
          <font>
@@ -57,7 +57,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;clientID&quot;)</string>
+         <string>tr(&quot;clientName&quot;)</string>
         </property>
         <property name="font">
          <font>

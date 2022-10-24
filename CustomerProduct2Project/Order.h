@@ -24,7 +24,7 @@ private:
 
 public:
     Order(const int );
-    Order(const int, QString, QString, int, int, int, int);
+    Order(const int, int, QString, QString, int, int, int);
 
     int GetOrderId() const;
     int GetClientId() const;

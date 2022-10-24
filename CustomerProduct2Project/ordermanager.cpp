@@ -42,13 +42,13 @@ OrderManager::OrderManager(ClientManager* CM, ProductManager* PM) : CM(CM), PM(P
         QList<QString> row = line.split(", ");
         if (row.size()) {
             int id = row[0].toInt();
-            QString productName = row[1];
+            int clientId = row[1].toInt();
             QString clientName = row[2];
-            int date = row[3].toInt();
-            int clientId = row[4].toInt();
+            QString productName = row[3];
+            int date = row[4].toInt();
             int orderPrice = row[5].toInt();
             int orderStock = row[6].toInt();
-            Order* c = new Order(id, productName, clientName, date, clientId, orderPrice, orderStock);
+            Order* c = new Order(id, clientId, clientName, productName, date,  orderPrice, orderStock);
             orderList.insert( id, c );
         }
     }
@@ -121,8 +121,6 @@ void OrderManager::AddObj()
         order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
         order -> SetDate(ui -> orderInputDateText -> text().toInt());
         order -> SetOrderPrice(ui -> orderInputOrderPriceText -> text().toInt());
-        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
-
         order -> SetClientName(CM -> TossObj(order->GetClientId()) -> GetName());
 
         orderList.insert(id, order);
@@ -186,7 +184,6 @@ void OrderManager::ModiObj()
         order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
         order -> SetDate(ui -> orderInputDateText -> text().toInt());
         order -> SetOrderPrice(ui -> orderInputOrderPriceText -> text().toInt());
-        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
         order -> SetClientName(CM -> TossObj(order->GetClientId()) -> GetName());
         return;
     }
@@ -282,9 +279,9 @@ void OrderManager::on_orderTreeWidget_itemClicked(QTreeWidgetItem *item, int col
 {
     Q_UNUSED(column);
     ui -> orderInputIdText -> setText(item->text(0));
-    ui -> orderInputProductNameText -> setText(item->text(1));
-    ui -> orderInputClientIdText -> setText(item->text(2));
-    ui -> orderInputDateText -> setText(item->text(3));
+    ui -> orderInputProductNameText -> setText(item->text(3));
+    ui -> orderInputClientIdText -> setText(item->text(1));
+    ui -> orderInputDateText -> setText(item->text(4));
     ui -> orderInputOrderPriceText -> setText(item->text(5));
     ui -> orderInputOrderStockText -> setText(item->text(6));
 }
