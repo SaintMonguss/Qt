@@ -2,5 +2,10 @@
     <qresource prefix="/">
         <file>images/eraser.png</file>
         <file>images/eraser2.png</file>
+        <file>images/order.png</file>
+        <file>images/chat.png</file>
+        <file>images/customer.png</file>
+        <file>images/product.png</file>
+        <file>images/order2.png</file>
     </qresource>
 </RCC>

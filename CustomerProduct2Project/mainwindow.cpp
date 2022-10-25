@@ -13,9 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     orderManager = new OrderManager(clientManager,productManager);
 
     ui -> tabWidget->setIconSize(QSize(50,50));
-    ui -> tabWidget->insertTab(0, clientManager, QIcon(":/images/eraser.png"), tr("clientManage"));
-    ui -> tabWidget->insertTab(1, productManager, tr("productManage"));
-    ui -> tabWidget->insertTab(2, orderManager, tr("orderManage"));
+    ui -> tabWidget->insertTab(0, clientManager, QIcon(":/images/customer.png"), tr(""));
+    ui -> tabWidget->insertTab(1, productManager, QIcon(":/images/product.png"), tr(""));
+    ui -> tabWidget->insertTab(2, orderManager, QIcon(":/images/order2.png"), tr(""));
 
 }
 
