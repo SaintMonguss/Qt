@@ -16,6 +16,8 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QProgressDialog>
+#include <QDir>
+#include <QCoreApplication>
 
 ChatServerForm::ChatServerForm(QWidget *parent) :
     QWidget(parent),
@@ -58,7 +60,7 @@ ChatServerForm::ChatServerForm(QWidget *parent) :
     menu = new QMenu;
     menu->addAction(inviteAction);
     menu->addAction(removeAction);
-    ui->clientTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->chatClientTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     progressDialog = new QProgressDialog(0);
     progressDialog->setAutoClose(true);
@@ -111,7 +113,7 @@ void ChatServerForm::receiveData( )
 
     switch(type) {
     case Chat_Login:
-        foreach(auto item, ui->clientTreeWidget->findItems(name, Qt::MatchFixedString, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchFixedString, 1)) {
             if(item->text(0) != "-") {
                 item->setText(0, "-");
             }
@@ -119,7 +121,7 @@ void ChatServerForm::receiveData( )
         }
         break;
     case Chat_In:
-        foreach(auto item, ui->clientTreeWidget->findItems(name, Qt::MatchFixedString, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchFixedString, 1)) {
             if(item->text(0) != "O") {
                 item->setText(0, "O");
             }
@@ -163,7 +165,7 @@ void ChatServerForm::receiveData( )
     }
         break;
     case Chat_Out:
-        foreach(auto item, ui->clientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
             if(item->text(0) != "-") {
                 item->setText(0, "-");
             }
@@ -171,7 +173,7 @@ void ChatServerForm::receiveData( )
         }
         break;
     case Chat_LogOut:
-        foreach(auto item, ui->clientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
             if(item->text(0) != "X") {
                 item->setText(0, "X");
             }
@@ -186,7 +188,7 @@ void ChatServerForm::removeClient()
     QTcpSocket *clientConnection = dynamic_cast<QTcpSocket *>(sender( ));
     if(clientConnection != nullptr) {
         QString name = clientNameHash[clientConnection->peerPort()];
-        foreach(auto item, ui->clientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
             item->setText(0, "X"); // 상태 변경
         }
         clientSocketHash.remove(name);
@@ -196,25 +198,25 @@ void ChatServerForm::removeClient()
 
 void ChatServerForm::addClient(int id, QString name)
 {
-    QTreeWidgetItem* item = new QTreeWidgetItem(ui->clientTreeWidget);
+    QTreeWidgetItem* item = new QTreeWidgetItem(ui->chatClientTreeWidget);
     item->setText(0, "X");
     item->setText(1, name);
-    ui->clientTreeWidget->addTopLevelItem(item);
+    ui->chatClientTreeWidget->addTopLevelItem(item);
     clientIDHash[name] = id;
-    ui->clientTreeWidget->resizeColumnToContents(0);
+    ui->chatClientTreeWidget->resizeColumnToContents(0);
 }
 
-void ChatServerForm::on_clientTreeWidget_customContextMenuRequested(const QPoint &pos)
+void ChatServerForm::on_chatClientTreeWidget_customContextMenuRequested(const QPoint &pos)
 {
-    if(ui->clientTreeWidget->currentItem() == nullptr) // 등록된 유저가 없을 경우 우클릭 방지
+    if(ui->chatClientTreeWidget->currentItem() == nullptr) // 등록된 유저가 없을 경우 우클릭 방지
         return;
     foreach(QAction *action, menu->actions()) {
         if(action->objectName() == "Invite")        // 초대
-            action->setEnabled(ui->clientTreeWidget->currentItem()->text(0) != "O");
+            action->setEnabled(ui->chatClientTreeWidget->currentItem()->text(0) != "O");
         else                                        // 강퇴
-            action->setEnabled(ui->clientTreeWidget->currentItem()->text(0) == "O");
+            action->setEnabled(ui->chatClientTreeWidget->currentItem()->text(0) == "O");
     }
-    QPoint globalPos = ui->clientTreeWidget->mapToGlobal(pos);
+    QPoint globalPos = ui->chatClientTreeWidget->mapToGlobal(pos);
     menu->exec(globalPos);
 }
 
@@ -226,11 +228,11 @@ void ChatServerForm::kickOut()
     out << Chat_KickOut;
     out.writeRawData("", 1020);
      // currentItem이 NULLptr 일 경우 문제 발생
-    QString name = ui->clientTreeWidget->currentItem()->text(1);
+    QString name = ui->chatClientTreeWidget->currentItem()->text(1);
     QTcpSocket* sock = clientSocketHash[name];
     sock->write(sendArray);
 
-    ui->clientTreeWidget->currentItem()->setText(0, "-");
+    ui->chatClientTreeWidget->currentItem()->setText(0, "-");
 }
 
 /* 클라이언트 초대하기 */
@@ -242,11 +244,11 @@ void ChatServerForm::inviteClient()
     out.writeRawData("", 1020);
 
     /* 소켓은 현재 선택된 아이템에 표시된 이름과 해쉬로 부터 가져온다. */
-    QString name = ui->clientTreeWidget->currentItem()->text(1);
+    QString name = ui->chatClientTreeWidget->currentItem()->text(1);
     QTcpSocket* sock = clientSocketHash[name];
     sock->write(sendArray);
 
-    ui->clientTreeWidget->currentItem()->setText(0, "O");
+    ui->chatClientTreeWidget->currentItem()->setText(0, "O");
 }
 
 /* 파일 전송을 위한 소켓 생성  확인*/
@@ -296,11 +298,20 @@ void ChatServerForm::readClient()
 
         QFileInfo info(filename);
         QString currentFileName = info.fileName();
-        file = new QFile(currentFileName);
+        //qDebug() << currentFileName;
+        // 프로젝트 파일의 워킹 디렉토리 경로확인
+        QString projectPath = QCoreApplication::applicationDirPath();
+        qDebug() << projectPath;
+        QDir Dir(projectPath + "/../downlods");
+        //다운로드 폴더 생성
+        if(!Dir.exists())
+        {
+            Dir.mkdir(projectPath + "/../downlods");
+        }
+        file = new QFile(projectPath + "/../downlods/" + currentFileName);
         file->open(QFile::WriteOnly);
     } else {                    // 파일 데이터를 읽어서 저장
         inBlock = receivedSocket->readAll();
-
         byteReceived += inBlock.size();
         file->write(inBlock);
         file->flush();

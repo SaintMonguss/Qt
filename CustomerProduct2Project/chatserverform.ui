@@ -35,7 +35,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTreeWidget" name="clientTreeWidget">
+        <widget class="QTreeWidget" name="chatClientTreeWidget">
          <property name="selectionBehavior">
           <enum>QAbstractItemView::SelectItems</enum>
          </property>
