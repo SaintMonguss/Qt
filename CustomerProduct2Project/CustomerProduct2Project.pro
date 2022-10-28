@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,7 +12,9 @@ SOURCES += \
     Client.cpp \
     Order.cpp \
     Product.cpp \
+    chatserverform.cpp \
     clientmanager.cpp \
+    logthread.cpp \
     main.cpp \
     mainwindow.cpp \
     ordermanager.cpp \
@@ -22,12 +24,15 @@ HEADERS += \
     Client.h \
     Order.h \
     Product.h \
+    chatserverform.h \
     clientmanager.h \
+    logthread.h \
     mainwindow.h \
     ordermanager.h \
     productmanager.h
 
 FORMS += \
+    chatserverform.ui \
     clientmanager.ui \
     mainwindow.ui \
     ordermanager.ui \

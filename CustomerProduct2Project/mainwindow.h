@@ -5,6 +5,7 @@
 #include "clientmanager.h"
 #include "productmanager.h"
 #include "ordermanager.h"
+#include "chatserverform.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,5 +24,6 @@ private:
     ClientManager *clientManager;
     ProductManager *productManager;
     OrderManager *orderManager;
+    ChatServerForm *chatServerForm;
 };
 #endif // MAINWINDOW_H
