@@ -26,7 +26,7 @@ OrderManager::OrderManager(ClientManager* CM, ProductManager* PM) : CM(CM), PM(P
     ui -> orderTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui -> orderTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
-    connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
+    connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SerchObj()));
     connect(ui -> orderModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui -> orderInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> orderResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));

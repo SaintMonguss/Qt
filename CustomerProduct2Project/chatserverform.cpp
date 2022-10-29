@@ -213,7 +213,7 @@ void ChatServerForm::on_chatClientTreeWidget_customContextMenuRequested(const QP
         return;
     foreach(QAction *action, menu->actions()) {
         if(action->objectName() == "Invite")        // 초대
-            action->setEnabled(ui->chatClientTreeWidget->currentItem()->text(0) != "O");
+            action->setEnabled(ui->chatClientTreeWidget->currentItem()->text(0) == "-");
         else                                        // 강퇴
             action->setEnabled(ui->chatClientTreeWidget->currentItem()->text(0) == "O");
     }

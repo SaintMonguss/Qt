@@ -33,6 +33,7 @@ private:
 public:
     explicit ClientManager(QWidget *parent = nullptr);
     ~ClientManager();
+    void loadData(); //저장된 데이터를 불러오기 위한 함수
 
 signals:
     void clientAdded(int, QString);

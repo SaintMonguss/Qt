@@ -8,10 +8,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    chatServerForm = new ChatServerForm;
     clientManager = new ClientManager;
     productManager = new ProductManager;
     orderManager = new OrderManager(clientManager,productManager);
-    chatServerForm = new ChatServerForm;
+
 
     ui -> tabWidget->setIconSize(QSize(50,50));
     ui -> tabWidget->insertTab(0, clientManager, QIcon(":/images/customer.png"), tr(""));
@@ -19,9 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui -> tabWidget->insertTab(2, orderManager, QIcon(":/images/order2.png"), tr(""));
     ui -> tabWidget -> insertTab(4, chatServerForm, QIcon(":/images/chat.png"), tr(""));
 
+
     connect(clientManager, SIGNAL(clientAdded(int, QString)),
             chatServerForm, SLOT(addClient(int, QString)));
-
+    clientManager -> loadData();
 }
 
 MainWindow::~MainWindow()
