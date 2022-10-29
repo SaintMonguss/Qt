@@ -47,6 +47,7 @@ ClientManager::ClientManager(QWidget *parent) :
             Client* c = new Client(id, row[1], row[2], row[3], row[4]);
             ui -> clientTreeWidget ->addTopLevelItem(c);
             clientList.insert(id, c);
+            emit clientAdded(id, row[1]);
         }
     }
     file.close( );
@@ -110,6 +111,7 @@ void ClientManager::AddObj()
         clientList.insert(id, client );
         ui -> clientTreeWidget ->addTopLevelItem(client);
         ui -> clientTreeWidget -> update();
+        emit clientAdded(id, ui -> clientInputNameText->text());
         return;
     }
 

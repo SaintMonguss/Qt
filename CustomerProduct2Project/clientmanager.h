@@ -34,6 +34,10 @@ public:
     explicit ClientManager(QWidget *parent = nullptr);
     ~ClientManager();
 
+signals:
+    void clientAdded(int, QString);
+
+
 private slots:
     void on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
     void resetSearchResult();

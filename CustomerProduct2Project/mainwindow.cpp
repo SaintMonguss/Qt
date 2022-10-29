@@ -19,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui -> tabWidget->insertTab(2, orderManager, QIcon(":/images/order2.png"), tr(""));
     ui -> tabWidget -> insertTab(4, chatServerForm, QIcon(":/images/chat.png"), tr(""));
 
+    connect(clientManager, SIGNAL(clientAdded(int, QString)),
+            chatServerForm, SLOT(addClient(int, QString)));
+
 }
 
 MainWindow::~MainWindow()

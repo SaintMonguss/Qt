@@ -88,6 +88,7 @@ void ChatServerForm::clientConnect( )
     QTcpSocket *clientConnection = chatServer->nextPendingConnection( ); // 대기중인 다음 연결을 반환해줌
     connect(clientConnection, SIGNAL(readyRead( )), SLOT(receiveData( )));
     connect(clientConnection, SIGNAL(disconnected( )), SLOT(removeClient()));
+    //ui -> chatClientTreeWidget -> update();
     qDebug("new connection is established...");
 }
 
