@@ -68,8 +68,7 @@ ChatServerForm::ChatServerForm(QWidget *parent) :
 
     logThread = new LogThread(this);
     logThread->start();
-
-    connect(ui->savePushButton, SIGNAL(clicked()), logThread, SLOT(saveData()));
+    connect(ui -> savePushButton, SIGNAL(clicked()), this, SLOT(commandedSaveData()));
 
     qDebug() << tr("The server is running on port %1.").arg(chatServer->serverPort( ));
 }
@@ -250,6 +249,12 @@ void ChatServerForm::inviteClient()
     sock->write(sendArray);
 
     ui->chatClientTreeWidget->currentItem()->setText(0, "O");
+}
+
+void ChatServerForm::commandedSaveData()
+{
+    logThread->saveData();
+    QMessageBox::information(this,"저장","채팅 로그가 저장되었습니다");
 }
 
 /* 파일 전송을 위한 소켓 생성  확인*/

@@ -3,6 +3,7 @@
 #include <QTreeWidgetItem>
 #include <QFile>
 #include <QDateTime>
+#include <QMessageBox>
 
 LogThread::LogThread(QObject *parent)
     : QThread{parent}
@@ -43,3 +44,4 @@ void LogThread::saveData()
         file.close();
     }
 }
+
