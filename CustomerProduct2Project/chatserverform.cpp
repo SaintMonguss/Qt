@@ -106,6 +106,7 @@ void ChatServerForm::receiveData( )
     in.readRawData(data, 1020);
 
     QString ip = clientConnection->peerAddress().toString(); // 연결상태면 피어 주소 반환 아닐시 NULL
+    qDebug() << ip;
     quint16 port = clientConnection->peerPort();
     QString name = QString::fromStdString(data);
 
@@ -245,7 +246,9 @@ void ChatServerForm::inviteClient()
 
     /* 소켓은 현재 선택된 아이템에 표시된 이름과 해쉬로 부터 가져온다. */
     QString name = ui->chatClientTreeWidget->currentItem()->text(1);
+
     QTcpSocket* sock = clientSocketHash[name];
+    clientNameHash[sock->peerPort()] = name;
     sock->write(sendArray);
 
     ui->chatClientTreeWidget->currentItem()->setText(0, "O");
