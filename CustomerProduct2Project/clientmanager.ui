@@ -38,7 +38,7 @@
       <widget class="QTreeWidget" name="clientTreeWidget">
        <column>
         <property name="text">
-         <string>tr(&quot;ID&quot;)</string>
+         <string>ID</string>
         </property>
         <property name="font">
          <font>
@@ -49,7 +49,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;name&quot;)</string>
+         <string>name</string>
         </property>
         <property name="font">
          <font>
@@ -60,7 +60,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;phoneNumber&quot;)</string>
+         <string>phoneNumber</string>
         </property>
         <property name="font">
          <font>
@@ -71,7 +71,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;address&quot;)</string>
+         <string>address</string>
         </property>
         <property name="font">
          <font>
@@ -82,7 +82,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;E-mail&quot;)</string>
+         <string>E-mail</string>
         </property>
         <property name="font">
          <font>
@@ -132,7 +132,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;ID&quot;)</string>
+                <string>ID</string>
                </property>
               </widget>
              </item>
@@ -162,7 +162,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;name&quot;)</string>
+                <string>name</string>
                </property>
               </widget>
              </item>
@@ -182,7 +182,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;phoneNumber&quot;)</string>
+                <string>phoneNumber</string>
                </property>
               </widget>
              </item>
@@ -202,7 +202,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;address&quot;)</string>
+                <string>address</string>
                </property>
               </widget>
              </item>
@@ -222,7 +222,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;E-mail&quot;)</string>
+                <string>E-mail</string>
                </property>
               </widget>
              </item>
@@ -252,14 +252,14 @@
              <item>
               <widget class="QPushButton" name="clientInputConfirmButton">
                <property name="text">
-                <string>tr(&quot;confirm&quot;)</string>
+                <string>confirm</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QPushButton" name="clientModifyButton">
                <property name="text">
-                <string>tr(&quot;modify&quot;)</string>
+                <string>modify</string>
                </property>
               </widget>
              </item>
@@ -277,7 +277,7 @@
          <item>
           <widget class="QLabel" name="label_17">
            <property name="text">
-            <string>tr(&quot;searchElements&quot;)</string>
+            <string>searchElements</string>
            </property>
           </widget>
          </item>
@@ -285,27 +285,27 @@
           <widget class="QComboBox" name="clientComboBox">
            <item>
             <property name="text">
-             <string>tr(&quot;name&quot;)</string>
+             <string>name</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;ID&quot;)</string>
+             <string>ID</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;phoneNumber&quot;)</string>
+             <string>phoneNumber</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;address&quot;)</string>
+             <string>address</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;E-mail&quot;)</string>
+             <string>E-mail</string>
             </property>
            </item>
           </widget>
@@ -342,94 +342,18 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;ID&quot;)</string>
+                <string>Elements</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="clientSearchIDText">
+              <widget class="QLineEdit" name="clientSearchText">
                <property name="readOnly">
                 <bool>false</bool>
                </property>
               </widget>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_19">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;name&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="clientSearchNameText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_23">
-           <item>
-            <widget class="QLabel" name="label_20">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;phoneNumber&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="clientSearchPHText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_24">
-           <item>
-            <widget class="QLabel" name="label_21">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;address&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="clientSearchAddressText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_25">
-           <item>
-            <widget class="QLabel" name="label_22">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;E-mail&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="clientSearchEmailText"/>
            </item>
           </layout>
          </item>
@@ -504,7 +428,7 @@
          <item>
           <widget class="QPushButton" name="clientSearchButton">
            <property name="text">
-            <string>tr(&quot;search&quot;)</string>
+            <string>search</string>
            </property>
           </widget>
          </item>

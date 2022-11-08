@@ -170,42 +170,42 @@ void ClientManager::ModiObj()
 void ClientManager::SearchObj()
 {
     QString target = ui-> clientComboBox->currentText();
-    if (target == "tr(\"ID\")")
+    if (target == tr("ID"))
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetId() == ui->clientSearchIDText->text().toInt())
+            if (itr.value()->GetId() == ui->clientSearchText->text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"name\")")
+    if (target == tr("name"))
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetName() == ui->clientSearchNameText->text())
+            if (itr.value()->GetName() == ui->clientSearchText->text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"phoneNumber\")")
+    if (target == tr("phoneNumber"))
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetPhoneNumber() == ui->clientSearchPHText -> text())
+            if (itr.value()->GetPhoneNumber() == ui->clientSearchText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"address\")")
+    if (target == tr("address"))
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetAddress() == ui -> clientSearchAddressText -> text())
+            if (itr.value()->GetAddress() == ui -> clientSearchText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"E-mail\")")
+    if (target == tr("E-mail"))
         for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
         {
-            if (itr.value()->GetEmail() == ui -> clientSearchEmailText ->text())
+            if (itr.value()->GetEmail() == ui -> clientSearchText ->text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
@@ -248,11 +248,7 @@ void ClientManager::on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int c
 
 void ClientManager::resetSearchResult()
 {
-    ui -> clientSearchIDText-> clear();
-    ui -> clientSearchNameText -> clear();
-    ui -> clientSearchPHText -> clear();
-    ui -> clientSearchAddressText -> clear();
-    ui -> clientSearchEmailText -> clear();
+    ui -> clientSearchText-> clear();
     for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
     {
         itr.value()->setHidden(false);

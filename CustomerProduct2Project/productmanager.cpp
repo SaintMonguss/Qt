@@ -17,7 +17,6 @@ ProductManager::ProductManager(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ProductManager)
 {
-
     ui->setupUi(this);
 
     QAction* removeAction = new QAction(tr("&Remove"));
@@ -170,42 +169,42 @@ void ProductManager::ModiObj()
 void ProductManager::SearchObj()
 {;
     QString target = ui-> productComboBox->currentText();
-    if (target == "tr(\"ID\")")
+    if (target == tr("ID"))
         for (auto itr = productList.begin(); itr != productList.end(); itr++)
         {
-            if (itr.value()->GetId() == ui-> productSearchIDText->text().toInt())
+            if (itr.value()->GetId() == ui-> productSearchText->text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"name\")")
+    if (target == tr("name"))
         for (auto itr = productList.begin(); itr != productList.end(); itr++)
         {
-            if (itr.value()->GetName() == ui->productSearchNameText->text())
+            if (itr.value()->GetName() == ui->productSearchText->text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"brand\")")
+    if (target == tr("brand"))
         for (auto itr = productList.begin(); itr != productList.end(); itr++)
         {
-            if (itr.value()->GetBrand() == ui->productSearchBrandText -> text())
+            if (itr.value()->GetBrand() == ui->productSearchText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"price\")")
+    if (target == tr("price"))
         for (auto itr = productList.begin(); itr != productList.end(); itr++)
         {
-            if (itr.value()->GetPrice() == ui -> productSearchPriceText -> text().toInt())
+            if (itr.value()->GetPrice() == ui -> productSearchText -> text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"stock\")")
+    if (target == tr("stock"))
         for (auto itr = productList.begin(); itr != productList.end(); itr++)
         {
-            if (itr.value()->GetStock() == ui -> productSearchStockText ->text().toInt())
+            if (itr.value()->GetStock() == ui -> productSearchText ->text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
@@ -253,11 +252,7 @@ void ProductManager::on_productTreeWidget_itemClicked(QTreeWidgetItem *item, int
 
 void ProductManager::resetSearchResult()
 {
-    ui -> productSearchIDText-> clear();
-    ui -> productSearchNameText -> clear();
-    ui -> productSearchBrandText -> clear();
-    ui -> productSearchPriceText -> clear();
-    ui -> productSearchStockText -> clear();
+    ui -> productSearchText-> clear();
     for (auto itr = productList.begin(); itr != productList.end(); itr++)
     {
         itr.value()->setHidden(false);

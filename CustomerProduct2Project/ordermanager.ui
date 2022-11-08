@@ -35,7 +35,7 @@
       <widget class="QTreeWidget" name="orderTreeWidget">
        <column>
         <property name="text">
-         <string>tr(&quot;orderID&quot;)</string>
+         <string>orderID</string>
         </property>
         <property name="font">
          <font>
@@ -46,7 +46,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;clientID&quot;)</string>
+         <string>clientID</string>
         </property>
         <property name="font">
          <font>
@@ -57,7 +57,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;clientName&quot;)</string>
+         <string>clientName</string>
         </property>
         <property name="font">
          <font>
@@ -68,7 +68,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;productName&quot;)</string>
+         <string>productName</string>
         </property>
         <property name="font">
          <font>
@@ -79,7 +79,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;date&quot;)</string>
+         <string>date</string>
         </property>
         <property name="font">
          <font>
@@ -90,7 +90,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;orderPrice&quot;)</string>
+         <string>orderPrice</string>
         </property>
         <property name="font">
          <font>
@@ -101,7 +101,7 @@
        </column>
        <column>
         <property name="text">
-         <string>tr(&quot;orderStcok&quot;)</string>
+         <string>orderStock</string>
         </property>
         <property name="font">
          <font>
@@ -131,7 +131,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_4">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_5">
         <attribute name="title">
@@ -151,7 +151,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;orderID&quot;)</string>
+                <string>orderID</string>
                </property>
               </widget>
              </item>
@@ -175,7 +175,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;clientID&quot;)</string>
+                <string>clientID</string>
                </property>
               </widget>
              </item>
@@ -195,7 +195,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;productName&quot;)</string>
+                <string>productName</string>
                </property>
               </widget>
              </item>
@@ -215,7 +215,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;date&quot;)</string>
+                <string>date</string>
                </property>
               </widget>
              </item>
@@ -235,7 +235,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;orderPrice&quot;)</string>
+                <string>orderPrice</string>
                </property>
               </widget>
              </item>
@@ -255,7 +255,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>tr(&quot;orderStock&quot;)</string>
+                <string>orderStock</string>
                </property>
               </widget>
              </item>
@@ -285,7 +285,7 @@
              <item>
               <widget class="QPushButton" name="orderInputConfirmButton">
                <property name="text">
-                <string>tr(&quot;confirm&quot;)</string>
+                <string>confirm</string>
                </property>
               </widget>
              </item>
@@ -308,7 +308,7 @@
              <item>
               <widget class="QPushButton" name="orderModifyButton">
                <property name="text">
-                <string>tr(&quot;modify&quot;)</string>
+                <string>modify</string>
                </property>
               </widget>
              </item>
@@ -326,7 +326,7 @@
          <item>
           <widget class="QLabel" name="label_50">
            <property name="text">
-            <string>tr(&quot;searchElements&quot;)</string>
+            <string>searchElements</string>
            </property>
           </widget>
          </item>
@@ -334,37 +334,37 @@
           <widget class="QComboBox" name="orderComboBox">
            <item>
             <property name="text">
-             <string>tr(&quot;orderID&quot;)</string>
+             <string>orderID</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;clientName&quot;)</string>
+             <string>clientName</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;clientID&quot;)</string>
+             <string>clientID</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;productName&quot;)</string>
+             <string>productName</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;date&quot;)</string>
+             <string>date</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;orderPrice&quot;)</string>
+             <string>orderPrice</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>tr(&quot;orderStock&quot;)</string>
+             <string>orderStock</string>
             </property>
            </item>
           </widget>
@@ -396,149 +396,16 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>tr(&quot;orderID&quot;)</string>
+              <string>Elements</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="orderSearchOrderIdText">
+            <widget class="QLineEdit" name="orderSearchText">
              <property name="readOnly">
               <bool>false</bool>
              </property>
             </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_57">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <item>
-            <widget class="QLabel" name="label_51">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;clientName&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="orderSearchclientNameText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_64">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <item>
-            <widget class="QLabel" name="label_58">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;clientID&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="orderSearchclientIdText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_59">
-           <item>
-            <widget class="QLabel" name="label_53">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;productName&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="orderSearchProductNameText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_60">
-           <item>
-            <widget class="QLabel" name="label_54">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;date&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="orderSearchDateText">
-             <property name="inputMask">
-              <string>00000000</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_61">
-           <item>
-            <widget class="QLabel" name="label_55">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;orderPrice&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="orderSearchOrderPriceText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_65">
-           <item>
-            <widget class="QLabel" name="label_59">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>tr(&quot;orderStock&quot;)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="orderSearchOrderStockText"/>
            </item>
           </layout>
          </item>
@@ -613,7 +480,7 @@
          <item>
           <widget class="QPushButton" name="orderSearchButton">
            <property name="text">
-            <string>tr(&quot;search&quot;)</string>
+            <string>search</string>
            </property>
           </widget>
          </item>

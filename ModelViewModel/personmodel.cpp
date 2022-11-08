@@ -13,5 +13,30 @@ PersonModel::PersonModel(QObject *parent) : QAbstractListModel(parent)
 
 PersonModel::~PersonModel()
 {
-
+    qDeleteAll(persons);
 }
+
+int PersonModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return persons.size();
+}
+
+QVariant PersonModel::data(const QModelIndex &index, int role) const
+{
+    if(index.row() < 0 || index.row() >= persons.count())
+        return QVariant();
+    persons *person = persons[index.row()];
+    if(role == Qt::DisplayRole)
+    {
+        return person -> names() + " " + QString::number(person -> age())
+                + "" + person -> faboriteColor();
+    }
+
+    if(role == Qt::ToolTipRole)
+    {
+        return person -> names() + "" + QString::number(index.row());
+    }
+    return QVariant();
+}
+

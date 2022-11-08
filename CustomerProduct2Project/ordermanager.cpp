@@ -196,58 +196,58 @@ void OrderManager::ModiObj()
 void OrderManager::SerchObj()
 {
     QString target = ui -> orderComboBox -> currentText();
-    if (target == "tr(\"orderID\")")
+    if (target == tr("orderID"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()-> GetOrderId() == ui-> orderSearchOrderIdText -> text().toInt())
+            if (itr.value()-> GetOrderId() == ui-> orderSearchText -> text().toInt())
                 itr.value()-> setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"clientName\")")
+    if (target == tr("clientName"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()->GetClientName() == ui -> orderSearchclientNameText -> text())
+            if (itr.value()->GetClientName() == ui -> orderSearchText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"clientID\")")
+    if (target == tr("clientID"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()->GetClientId() == ui -> orderSearchclientIdText -> text().toInt())
+            if (itr.value()->GetClientId() == ui -> orderSearchText -> text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"productName\")")
+    if (target == tr("productName"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()->GetProductName() == ui -> orderSearchProductNameText -> text())
+            if (itr.value()->GetProductName() == ui -> orderSearchText -> text())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"date\")")
+    if (target == tr("date"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()->GetDate() == ui -> orderSearchDateText ->text().toInt())
+            if (itr.value()->GetDate() == ui -> orderSearchText ->text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"orderPrice\")")
+    if (target == tr("orderPrice"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()->GetOrderPrice() == ui -> orderSearchOrderPriceText ->text().toInt())
+            if (itr.value()->GetOrderPrice() == ui -> orderSearchText ->text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);
         }
-    if (target == "tr(\"orderStock\")")
+    if (target == tr("orderStock"))
         for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
         {
-            if (itr.value()->GetOrderStock() == ui -> orderSearchOrderStockText ->text().toInt())
+            if (itr.value()->GetOrderStock() == ui -> orderSearchText ->text().toInt())
                 itr.value()->setHidden(false);
             else
                 itr.value()->setHidden(true);

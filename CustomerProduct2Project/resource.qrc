@@ -7,5 +7,6 @@
         <file>images/customer.png</file>
         <file>images/product.png</file>
         <file>images/order2.png</file>
+        <file>lang_kr.qm</file>
     </qresource>
 </RCC>
