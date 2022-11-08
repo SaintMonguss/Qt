@@ -33,23 +33,6 @@ ClientManager::ClientManager(QWidget *parent) :
     connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> clientResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
 
-    QFile file("clientlist.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-
-    QTextStream in(&file);
-    idHistory = in.readLine().toInt(); // 아이디 히스토리 유지
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QList<QString> row = line.split(", ");
-        if(row.size()) {
-            int id = row[0].toInt();
-            Client* c = new Client(id, row[1], row[2], row[3], row[4]);
-            ui -> clientTreeWidget ->addTopLevelItem(c);
-            clientList.insert(id, c);
-        }
-    }
-    file.close( );
 }
 
 ClientManager::~ClientManager()
@@ -110,6 +93,7 @@ void ClientManager::AddObj()
         clientList.insert(id, client );
         ui -> clientTreeWidget ->addTopLevelItem(client);
         ui -> clientTreeWidget -> update();
+        emit clientAdded(id, ui -> clientInputNameText->text());
         return;
     }
 
@@ -213,7 +197,27 @@ void ClientManager::SearchObj()
     return;
 }
 
-
+//생성자에서 진행시 chatserver와 연동의 서순 문제가 발생, 멤버함수로 구현
+void ClientManager::loadData()
+{
+    QFile file("clientlist.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QTextStream in(&file);
+    idHistory = in.readLine().toInt(); // 아이디 히스토리 유지
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QList<QString> row = line.split(", ");
+        if(row.size()) {
+            int id = row[0].toInt();
+            Client* c = new Client(id, row[1], row[2], row[3], row[4]);
+            ui -> clientTreeWidget ->addTopLevelItem(c);
+            clientList.insert(id, c);
+            emit clientAdded(id, row[1]);
+        }
+    }
+    file.close( );
+}
 
 //고객 한명의 정보를 리턴하는 함수
 Client* ClientManager::TossObj(int id)

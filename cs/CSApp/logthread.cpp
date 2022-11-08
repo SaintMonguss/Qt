@@ -3,7 +3,6 @@
 #include <QTreeWidgetItem>
 #include <QFile>
 #include <QDateTime>
-#include <QMessageBox>
 
 LogThread::LogThread(QObject *parent)
     : QThread{parent}
@@ -16,7 +15,7 @@ void LogThread::run()
 {
     Q_FOREVER {
         saveData();
-        sleep(30);      // 30초마다 저장
+        sleep(60);      // 1분마다 저장
     }
 }
 
@@ -44,4 +43,3 @@ void LogThread::saveData()
         file.close();
     }
 }
-

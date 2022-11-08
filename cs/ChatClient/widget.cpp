@@ -175,6 +175,7 @@ void Widget::receiveData( )
         inputLine->setDisabled(true);       // 버튼의 상태 변경
         sentButton->setDisabled(true);
         fileButton->setDisabled(true);
+        connectButton->setText(tr("Chat in"));
         name->setReadOnly(false);           // 메시지 입력 불가
         break;
     case Chat_Invite:       // 초대면
@@ -183,6 +184,7 @@ void Widget::receiveData( )
         inputLine->setEnabled(true);
         sentButton->setEnabled(true);
         fileButton->setEnabled(true);
+        connectButton->setText(tr("Chat Out"));
         name->setReadOnly(true);            // 메시지 입력 가능
         break;
     };

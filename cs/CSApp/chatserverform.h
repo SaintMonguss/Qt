@@ -41,28 +41,28 @@ private:
     Ui::ChatServerForm *ui;
     QTcpServer *chatServer;
     QTcpServer *fileServer;
-    QHash<quint16, QString> clientNameHash; // 포트 넘버를 키로
+    QHash<quint16, QString> clientNameHash;
     QHash<QString, QTcpSocket*> clientSocketHash;
     QHash<QString, int> clientIDHash;
     QMenu* menu;
     QFile* file;
-    QProgressDialog* progressDialog;  //진행정도 표시
+    QProgressDialog* progressDialog;
     qint64 totalSize;
     qint64 byteReceived;
     QByteArray inBlock;
     LogThread* logThread;
 
 private slots:
-    void acceptConnection();                // 파일 서버
+    void acceptConnection();                /* 파일 서버 */
     void readClient();
-    void commandedSaveData();               //수동 로그 저장시 안내 메시지 표시를 위해 존재
-    void clientConnect( );                  // 채팅 서버
+
+    void clientConnect( );                  /* 채팅 서버 */
     void receiveData( );
     void removeClient( );
     void addClient(int, QString);
     void inviteClient();
     void kickOut();
-    void on_chatClientTreeWidget_customContextMenuRequested(const QPoint &pos);
+    void on_clientTreeWidget_customContextMenuRequested(const QPoint &pos);
 };
 
 #endif // CHATSERVERFORM_H
