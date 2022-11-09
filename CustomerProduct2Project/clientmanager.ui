@@ -18,7 +18,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="12,0,4">
+    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,4">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -35,63 +35,7 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QTreeWidget" name="clientTreeWidget">
-       <column>
-        <property name="text">
-         <string>ID</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>name</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>phoneNumber</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>address</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>E-mail</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-      </widget>
+      <widget class="QTreeView" name="clientTreeView"/>
      </item>
      <item>
       <spacer name="horizontalSpacer_3">

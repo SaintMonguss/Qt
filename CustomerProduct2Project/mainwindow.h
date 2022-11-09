@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtSql>
+#include <QSqlDatabase>
+
 #include "clientmanager.h"
 #include "productmanager.h"
 #include "ordermanager.h"
