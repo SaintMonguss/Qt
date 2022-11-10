@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QPixmap>
+#include <QSqlQuery>
+#include <QSqlTableModel>
 
 #include "Client.h"
 #include "clientmanager.h"
@@ -25,9 +27,9 @@ ClientManager::ClientManager(QWidget *parent) :
 
     menu = new QMenu;
     menu->addAction(removeAction);
-    ui->clientTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->clientTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui-> clientTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui-> clientTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui -> clientSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> clientModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui-> clientInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
@@ -200,23 +202,30 @@ void ClientManager::SearchObj()
 //생성자에서 진행시 chatserver와 연동의 서순 문제가 발생, 멤버함수로 구현
 void ClientManager::loadData()
 {
-    QFile file("clientlist.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-    QTextStream in(&file);
-    idHistory = in.readLine().toInt(); // 아이디 히스토리 유지
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QList<QString> row = line.split(", ");
-        if(row.size()) {
-            int id = row[0].toInt();
-            Client* c = new Client(id, row[1], row[2], row[3], row[4]);
-            ui -> clientTreeWidget ->addTopLevelItem(c);
-            clientList.insert(id, c);
-            emit clientAdded(id, row[1]);
-        }
+    QSqlDatabase db = QSqlDatabase::database();
+    db.setDatabaseName("clientlist.db");
+    if (db.open( )) {
+        QSqlQuery query;
+        query.exec("CREATE TABLE IF NOT EXISTS client(id INTEGER Primary Key, name VARCHAR(30) NOT NULL, phoneNumber VARCHAR(20) NOT NULL, address VARCHAR(50));");
+
+        clientModel = new QSqlTableModel();
+        clientModel->setTable("client");
+        clientModel->select();
+        clientModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
+        clientModel->setHeaderData(1, Qt::Horizontal, tr("Name"));
+        clientModel->setHeaderData(2, Qt::Horizontal, tr("Phone Number"));
+        clientModel->setHeaderData(3, Qt::Horizontal, tr("Address"));
+
+        ui->tableView->setModel(clientModel);
+        ui->tableView->resizeColumnsToContents();
     }
-    file.close( );
+
+    for(int i = 0; i < clientModel->rowCount(); i++) {
+        int id = clientModel->data(clientModel->index(i, 0)).toInt();
+        QString name = clientModel->data(clientModel->index(i, 1)).toString();
+        //clientList.insert(id, clientModel->index(i, 0));
+        emit clientAdded(id, name);
+    }
 }
 
 //고객 한명의 정보를 리턴하는 함수

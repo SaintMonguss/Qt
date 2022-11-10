@@ -16,6 +16,9 @@ using std::cin;
 using std::string;
 using std::map;
 
+class QSqlTableModel;
+class QSqlDatabase;
+
 namespace Ui {
 class ClientManager;
 }
@@ -29,6 +32,7 @@ private:
     Ui::ClientManager *ui;
     QMap<int, Client*> clientList;
     QMenu* menu;
+    QSqlTableModel* clientModel;
 
 public:
     explicit ClientManager(QWidget *parent = nullptr);
