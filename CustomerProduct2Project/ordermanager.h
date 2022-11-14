@@ -4,20 +4,13 @@
 #include <QWidget>
 #include <QString>
 #include <iostream>
-#include <map>
-#include <fstream>
-#include <sstream>
-#include <QMap>
-
-#include "Order.h"
-#include "clientmanager.h"
-#include "productmanager.h"
-
 
 using std::cout;
 using std::cin;
 using std::string;
-using std::map;
+
+class QSqlTableModel;
+class QSqlDatabase;
 
 namespace Ui {
 class OrderManager;
@@ -29,19 +22,16 @@ class OrderManager : public QWidget
 
 private:
     QMenu* menu;
-    int idHistory;
     Ui::OrderManager *ui;
-    QMap<int, Order*> orderList;
-    ClientManager* CM;
-    ProductManager* PM;
+    QSqlTableModel* orderModel;
 
 public:
-    OrderManager(ClientManager*, ProductManager*);
+    OrderManager();
     ~OrderManager();
 
 private slots:
-    void on_orderTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
     void resetSearchResult();
+    void on_orderTreeView_clicked(const QModelIndex &index);
 
 public slots:
     void showContextMenu(const QPoint &);
@@ -49,7 +39,7 @@ public slots:
     void DelObj();
     void ModiObj();
     void SerchObj();
-    Order* TossObj(int);
+    void TossOrderInfo(int);
 };
 
 #endif // ORDERMANAGER_H

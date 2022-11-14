@@ -1,14 +1,10 @@
 #include "ordermanager.h"
-#include "ui_clientmanager.h"
 #include "ui_ordermanager.h"
 
 #include <iostream>
 #include <string>
 #include <iomanip>
-#include <stdio.h>
 #include <windows.h>
-#include <QFile>
-#include <QMap>
 #include <QMessageBox>
 #include <QMenu>
 
@@ -300,3 +296,9 @@ void OrderManager::resetSearchResult()
         itr.value()->setHidden(false);
     }
 }
+
+void OrderManager::on_orderTreeView_clicked(const QModelIndex &index)
+{
+
+}
+

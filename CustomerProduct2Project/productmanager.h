@@ -8,7 +8,6 @@
 using std::cout;
 using std::cin;
 using std::string;
-using std::map;
 
 class QSqlTableModel;
 class QSqlDatabase;
