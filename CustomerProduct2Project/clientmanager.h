@@ -30,7 +30,6 @@ class ClientManager : public QWidget
 private:
     int idHistory;
     Ui::ClientManager *ui;
-    QMap<int, Client*> clientList;
     QMenu* menu;
     QSqlTableModel* clientModel;
 
@@ -41,11 +40,11 @@ public:
 
 signals:
     void clientAdded(int, QString);
-
+    void sendClientInfo(QString, QString, QString, QString);
 
 private slots:
-    void on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
     void resetSearchResult();
+    void on_clientTreeView_clicked(const QModelIndex &index);
 
 public slots:
     void showContextMenu(const QPoint &);
@@ -53,7 +52,7 @@ public slots:
     void DelObj();
     void ModiObj();
     void SearchObj( );
-    Client* TossObj(int);
+    void TossClientInfo(int);
 };
 
 #endif // CLIENTMANAGER_H

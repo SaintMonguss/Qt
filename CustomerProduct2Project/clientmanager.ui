@@ -86,7 +86,7 @@
                 <string>00000</string>
                </property>
                <property name="readOnly">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -229,12 +229,12 @@
           <widget class="QComboBox" name="clientComboBox">
            <item>
             <property name="text">
-             <string>name</string>
+             <string>ID</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>ID</string>
+             <string>name</string>
             </property>
            </item>
            <item>

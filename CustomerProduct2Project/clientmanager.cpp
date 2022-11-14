@@ -11,7 +11,6 @@
 #include <QSqlQuery>
 #include <QSqlTableModel>
 
-#include "Client.h"
 #include "clientmanager.h"
 #include "ui_clientmanager.h"
 
@@ -69,6 +68,7 @@ void ClientManager::loadData()
                    "START WITH 1 ;");
         clientModel = new QSqlTableModel();
         clientModel->setTable("client");
+        clientModel->setFilter("iswithdrow = 0");
         clientModel->select();
         clientModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
         clientModel->setHeaderData(1, Qt::Horizontal, tr("Name"));
@@ -77,11 +77,7 @@ void ClientManager::loadData()
         clientModel->setHeaderData(4, Qt::Horizontal, tr("Email"));
 
         ui-> clientTreeView->setModel(clientModel);
-        ui-> clientTreeView->resizeColumnToContents(0);
-        ui-> clientTreeView->resizeColumnToContents(1);
-        ui-> clientTreeView->resizeColumnToContents(2);
-        ui-> clientTreeView->resizeColumnToContents(3);
-        ui-> clientTreeView->resizeColumnToContents(4);
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     for(int i = 0; i < clientModel->rowCount(); i++)
     {
@@ -116,19 +112,16 @@ void ClientManager::AddObj()
         email = ui -> clientInputEmailText->text();
 
         QSqlQuery query(clientModel->database());
-        query.prepare("INSERT INTO client VALUES (seq_client_id.nextval, ?, ?, ?, ?, 1)");
+        query.prepare("INSERT INTO client VALUES (seq_client_id.nextval, ?, ?, ?, ?, 0)");
         query.bindValue(1, name);
         query.bindValue(2, phonNumber);
         query.bindValue(3, address);
         query.bindValue(4, email);
         id = query.boundValue(0).toInt();
         query.exec();
+        clientModel->setFilter("iswithdrow = 0");
         clientModel->select();
-        ui-> clientTreeView->resizeColumnToContents(0);
-        ui-> clientTreeView->resizeColumnToContents(1);
-        ui-> clientTreeView->resizeColumnToContents(2);
-        ui-> clientTreeView->resizeColumnToContents(3);
-        ui-> clientTreeView->resizeColumnToContents(4);
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
         emit clientAdded(id, ui -> clientInputNameText->text());
     }
     ui -> clientInputNameText-> clear();
@@ -144,21 +137,15 @@ void ClientManager::DelObj()
     QModelIndex index = ui->clientTreeView->currentIndex();
     if(index.isValid())
     {
-        clientModel->setData(index.siblingAtColumn(5), 0);
+        clientModel->setData(index.siblingAtColumn(5), 1);
         clientModel->select();
-        ui-> clientTreeView->resizeColumnToContents(0);
-        ui-> clientTreeView->resizeColumnToContents(1);
-        ui-> clientTreeView->resizeColumnToContents(2);
-        ui-> clientTreeView->resizeColumnToContents(3);
-        ui-> clientTreeView->resizeColumnToContents(4);
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
 }
 
 // 고객 정보 수정
 void ClientManager::ModiObj()
 {
-    int id;
-    Client* client;
     if(
             ui -> clientInputIDText->text() != "" &&
             ui -> clientInputNameText->text() != "" &&
@@ -166,19 +153,25 @@ void ClientManager::ModiObj()
             ui -> clientInputAddressText->text() != "" &&
             ui -> clientInputEmailText->text() != "")
     {
-        id = (ui -> clientInputIDText->text()).toInt();
-        if(clientList.find(id) == clientList.end())
+        QModelIndex index = ui->clientTreeView->currentIndex();
+        if(index.isValid())
         {
-            QMessageBox::information(this, "안내", "해당 하는 ID의 고객 정보가 없습니다.");
-            return;
-        }
+            QString name, phonNumber, address, email;
+            name = ui->clientInputNameText->text();
+            phonNumber = ui->clientInputPHText->text();
+            address = ui-> clientInputAddressText ->text();
+            email = ui -> clientInputEmailText->text();
 
-        client = clientList.find(id).value();			// 찾아서 클라이언트 객체를 할당
-        client->SetName(ui -> clientInputNameText->text());
-        client->SetPhoneNumber(ui -> clientInputPHText->text());
-        client->SetAddress(ui -> clientInputAddressText->text());
-        client->SetEmail(ui -> clientInputEmailText->text());
-        return;
+            clientModel->setData(index.siblingAtColumn(1), name);
+            clientModel->setData(index.siblingAtColumn(2), phonNumber);
+            clientModel->setData(index.siblingAtColumn(3), address);
+            clientModel->setData(index.siblingAtColumn(4), email);
+            clientModel->submit();
+            clientModel->setFilter("iswithdrow = 0");
+            clientModel->select();
+
+            ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        }
     }
     else
         QMessageBox::information(this, "안내", "수정 하고자 하는 고객의 모든 정보를 입력해 주세요.");
@@ -190,60 +183,54 @@ void ClientManager::ModiObj()
 void ClientManager::SearchObj()
 {
     QString target = ui-> clientComboBox->currentText();
+    QString search = ui->clientSearchText->text();
     if (target == tr("ID"))
-        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-        {
-            if (itr.value()->GetId() == ui->clientSearchText->text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        clientModel -> setFilter(QString("iswithdrow = 0 and id like '%%1%'").arg(search));
+        clientModel -> select();
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("name"))
-        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-        {
-            if (itr.value()->GetName() == ui->clientSearchText->text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        clientModel -> setFilter(QString("iswithdrow = 0 and name like '%%1%'").arg(search));
+        clientModel -> select();
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("phoneNumber"))
-        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-        {
-            if (itr.value()->GetPhoneNumber() == ui->clientSearchText -> text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        clientModel -> setFilter(QString("iswithdrow = 0 and phoneNumber like '%%1%'").arg(search));
+        clientModel -> select();
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("address"))
-        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-        {
-            if (itr.value()->GetAddress() == ui -> clientSearchText -> text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        clientModel -> setFilter(QString("iswithdrow = 0 and address like '%%1%'").arg(search));
+        clientModel -> select();
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("E-mail"))
-        for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-        {
-            if (itr.value()->GetEmail() == ui -> clientSearchText ->text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        clientModel -> setFilter(QString("iswithdrow = 0 and email like '%%1%'").arg(search));
+        clientModel -> select();
+        ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     return;
 }
 
 //고객 한명의 정보를 리턴하는 함수
-Client* ClientManager::TossObj(int id)
+void ClientManager::TossClientInfo(int id)
 {
-    Client* client =nullptr;
-    if(clientList.find(id) == clientList.end())
-    {
-        qDebug() << "해당하는 ID 없음";
-        return client;
+    QModelIndexList indexes = clientModel->match(clientModel->index(0, 0), Qt::EditRole, id, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
+
+    foreach(auto index, indexes) {
+//    QModelIndex index = clientList[key];
+        QString name = clientModel->data(index.siblingAtColumn(1)).toString();
+        QString phoneNumber = clientModel->data(index.siblingAtColumn(2)).toString();
+        QString address = clientModel->data(index.siblingAtColumn(3)).toString();
+        QString email = clientModel->data(index.siblingAtColumn(4)).toString();
+
+        emit sendClientInfo(name, phoneNumber, address, email);
     }
-    client = clientList.find(id).value();
-    return client;
 }
 //선택시 메뉴 열리기
 
@@ -273,8 +260,9 @@ void ClientManager::on_clientTreeView_clicked(const QModelIndex &index)
 void ClientManager::resetSearchResult()
 {
     ui -> clientSearchText-> clear();
-    clientModel->setFilter("");
+    clientModel->setFilter("iswithdrow = 0");
     clientModel->select();
+    ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 
