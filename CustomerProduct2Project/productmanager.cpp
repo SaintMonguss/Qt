@@ -8,8 +8,9 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QPixmap>
+#include <QSqlQuery>
+#include <QSqlTableModel>
 
-#include "Product.h"
 #include "productmanager.h"
 #include "ui_productmanager.h"
 
@@ -24,31 +25,43 @@ ProductManager::ProductManager(QWidget *parent) :
 
     menu = new QMenu;
     menu->addAction(removeAction);
-    ui->productTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->productTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui-> productTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui-> productTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui -> productSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> productModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui-> productInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> productResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
 
-    QFile file("productlist.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+    QSqlDatabase db = QSqlDatabase::database();
+    db.setDatabaseName("productlist.db");
+    if (db.open( )) {
+        QSqlQuery query(db);
+        query.exec("CREATE TABLE IF NOT EXISTS product"
+                   "(id INTEGER Primary Key,"
+                   "name VARCHAR(40) NOT NULL,"
+                   "brand VARCHAR(40) NOT NULL,"
+                   "price VARCHAR(20),"
+                   "stock VARCHAR(20),"
+                   "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1);");
+        //ID값 프로시져 선언
+        // 버그 가능성 있음
+        query.exec("CREATE SEQUENCE IF NOT EXISTS seq_product_id"
+                   "INCREMENT BY 1 "
+                   "START WITH 1 ;");
+        productModel = new QSqlTableModel();
+        productModel->setTable("product");
+        productModel->setFilter("isdelete = 0");
+        productModel->select();
+        productModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
+        productModel->setHeaderData(1, Qt::Horizontal, tr("Name"));
+        productModel->setHeaderData(2, Qt::Horizontal, tr("brand"));
+        productModel->setHeaderData(3, Qt::Horizontal, tr("price"));
+        productModel->setHeaderData(4, Qt::Horizontal, tr("stock"));
 
-    QTextStream in(&file);
-    idHistory = in.readLine().toInt(); // 아이디 히스토리 유지
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QList<QString> row = line.split(", ");
-        if(row.size()) {
-            int id = row[0].toInt();
-            Product* p = new Product(id, row[1], row[2], row[3].toInt(), row[4].toInt());
-            ui -> productTreeWidget ->addTopLevelItem(p);
-            productList.insert(id, p);
-        }
+        ui-> productTreeView->setModel(productModel);
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
-    file.close( );
 }
 
 ProductManager::~ProductManager()
@@ -258,3 +271,9 @@ void ProductManager::resetSearchResult()
         itr.value()->setHidden(false);
     }
 }
+
+void ProductManager::on_productTreeView_clicked(const QModelIndex &index)
+{
+
+}
+

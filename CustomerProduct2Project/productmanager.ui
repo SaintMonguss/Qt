@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="12,0,4">
+    <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,4">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -32,63 +32,7 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QTreeWidget" name="productTreeWidget">
-       <column>
-        <property name="text">
-         <string>ID</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>name</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>brand</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>price</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>stock</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-      </widget>
+      <widget class="QTreeView" name="productTreeView"/>
      </item>
      <item>
       <spacer name="horizontalSpacer_3">
@@ -109,7 +53,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_3">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_2">
         <attribute name="title">
@@ -141,7 +85,7 @@
                <item>
                 <widget class="QLineEdit" name="productInputIDText">
                  <property name="readOnly">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>

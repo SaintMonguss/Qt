@@ -2,19 +2,16 @@
 #define PRODUCTMANAGER_H
 
 #include <iostream>
-#include <QMap>
-#include <vector>
-#include <fstream>
-#include <sstream>
 #include <QWidget>
 #include <QString>
-
-#include "Product.h"
 
 using std::cout;
 using std::cin;
 using std::string;
 using std::map;
+
+class QSqlTableModel;
+class QSqlDatabase;
 
 namespace Ui {
 class ProductManager;
@@ -25,21 +22,17 @@ class ProductManager : public QWidget
     Q_OBJECT
 
 private:
-    int idHistory;
     Ui::ProductManager *ui;
-    QMap<int, Product*> productList;
     QMenu* menu;
+    QSqlTableModel* productModel;
 
 public:
     explicit ProductManager(QWidget *parent = nullptr);
     ~ProductManager();
 
-    //    std::vector<QString> parseCSV(std::istream& , char);
-
 private slots:
-    void on_productTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
     void resetSearchResult();
-
+    void on_productTreeView_clicked(const QModelIndex &index);
 
 public slots:
     void showContextMenu(const QPoint &);
@@ -47,7 +40,7 @@ public slots:
     void DelObj();
     void ModiObj();
     void SearchObj( );
-    Product* TossObj(int);
+    void TossProductInfo(int);
 };
 
 #endif // PRODUCTMANAGER_H
