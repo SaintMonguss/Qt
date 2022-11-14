@@ -40,30 +40,63 @@ ClientManager::ClientManager(QWidget *parent) :
 ClientManager::~ClientManager()
 {
     delete ui;
-
-    //파일 저장
-    QFile file("clientlist.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-
-    QTextStream out(&file);
-    out << idHistory << "\n";
-    for (const auto& v : clientList) {
-        Client* c = v;
-        out << QString::number(c->GetId()) << ", ";
-        out << c->GetName() << ", ";
-        out << c->GetPhoneNumber() << ", ";
-        out << c->GetAddress() << ", ";
-        out << c->GetEmail() << "\n";
+    QSqlDatabase db = clientModel->database();
+    if(db.isOpen())
+    {
+        clientModel->submitAll();
+        db.close();
     }
-    file.close( );
+}
+
+//생성자에서 진행시 chatserver와 연동의 서순 문제가 발생, 멤버함수로 구현
+void ClientManager::loadData()
+{
+    QSqlDatabase db = QSqlDatabase::database();
+    db.setDatabaseName("clientlist.db");
+    if (db.open( )) {
+        QSqlQuery query;
+        query.exec("CREATE TABLE IF NOT EXISTS client"
+                   "(id INTEGER Primary Key,"
+                   "name VARCHAR(20) NOT NULL,"
+                   "phoneNumber VARCHAR(20) NOT NULL,"
+                   "address VARCHAR(50),"
+                   "email VARCHAR(20),"
+                   "iswithdrow BOOLEAN NOT NULL CHECK (iswithdrow IN (0, 1);");
+        //ID값 프로시져 선언
+        // 버그 가능성 있음
+        query.exec("CREATE SEQUENCE IF NOT EXISTS seq_client_id"
+                   "INCREMENT BY 1 "
+                   "START WITH 1 ;");
+        clientModel = new QSqlTableModel();
+        clientModel->setTable("client");
+        clientModel->select();
+        clientModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
+        clientModel->setHeaderData(1, Qt::Horizontal, tr("Name"));
+        clientModel->setHeaderData(2, Qt::Horizontal, tr("Phone Number"));
+        clientModel->setHeaderData(3, Qt::Horizontal, tr("Address"));
+        clientModel->setHeaderData(4, Qt::Horizontal, tr("Email"));
+
+        ui-> clientTreeView->setModel(clientModel);
+        ui-> clientTreeView->resizeColumnToContents(0);
+        ui-> clientTreeView->resizeColumnToContents(1);
+        ui-> clientTreeView->resizeColumnToContents(2);
+        ui-> clientTreeView->resizeColumnToContents(3);
+        ui-> clientTreeView->resizeColumnToContents(4);
+    }
+    for(int i = 0; i < clientModel->rowCount(); i++)
+    {
+        int id = clientModel->data(clientModel->index(i, 0)).toInt();
+        QString name = clientModel->data(clientModel->index(i, 1)).toString();
+        //clientList.insert(id, clientModel->index(i, 0));
+        emit clientAdded(id, name);
+    }
 }
 
 
 //고객 정보 추가
 void ClientManager::AddObj()
 {
-    Client* client;
+    QString name, phonNumber, address, email;
     int id;
 
     if(ui -> clientInputIDText->text() != "")
@@ -71,52 +104,53 @@ void ClientManager::AddObj()
         QMessageBox::information(this, "ID 입력 금지", "신규 고객 등록시에는 ID 입력 금지");
         return;
     }
-
-    if (clientList.empty())
-    {
-        idHistory  = id = 1;
-    }
-    else
-    {
-        id = idHistory + 1;
-        idHistory += 1;
-    }
     if(
             ui -> clientInputNameText->text() != "" &&
             ui -> clientInputPHText->text() != "" &&
             ui -> clientInputAddressText->text() != "" &&
             ui -> clientInputEmailText->text() != "")
     {
-        client = new Client(id);
-        client->SetName(ui -> clientInputNameText->text());
-        client->SetPhoneNumber(ui -> clientInputPHText -> text());
-        client->SetAddress(ui -> clientInputAddressText -> text());
-        client->SetEmail(ui -> clientInputEmailText -> text());
-        clientList.insert(id, client );
-        ui -> clientTreeWidget ->addTopLevelItem(client);
-        ui -> clientTreeWidget -> update();
-        emit clientAdded(id, ui -> clientInputNameText->text());
-        return;
-    }
+        name = ui -> clientInputNameText->text();
+        phonNumber = ui -> clientInputPHText->text();
+        address = ui -> clientInputAddressText->text();
+        email = ui -> clientInputEmailText->text();
 
+        QSqlQuery query(clientModel->database());
+        query.prepare("INSERT INTO client VALUES (seq_client_id.nextval, ?, ?, ?, ?, 1)");
+        query.bindValue(1, name);
+        query.bindValue(2, phonNumber);
+        query.bindValue(3, address);
+        query.bindValue(4, email);
+        id = query.boundValue(0).toInt();
+        query.exec();
+        clientModel->select();
+        ui-> clientTreeView->resizeColumnToContents(0);
+        ui-> clientTreeView->resizeColumnToContents(1);
+        ui-> clientTreeView->resizeColumnToContents(2);
+        ui-> clientTreeView->resizeColumnToContents(3);
+        ui-> clientTreeView->resizeColumnToContents(4);
+        emit clientAdded(id, ui -> clientInputNameText->text());
+    }
     ui -> clientInputNameText-> clear();
     ui -> clientInputPHText -> clear();
     ui -> clientInputAddressText -> clear();
     ui -> clientInputEmailText -> clear();
-
     return;
 }
 
 // 고객 정보 삭제
 void ClientManager::DelObj()
 {
-    QTreeWidgetItem* item = ui->clientTreeWidget->currentItem();
-    if(item != nullptr) {
-        clientList.remove(item->text(0).toInt());
-        ui->clientTreeWidget->takeTopLevelItem(ui->clientTreeWidget->indexOfTopLevelItem(item));
-//        delete item;
-        ui->clientTreeWidget->update();
-        return;
+    QModelIndex index = ui->clientTreeView->currentIndex();
+    if(index.isValid())
+    {
+        clientModel->setData(index.siblingAtColumn(5), 0);
+        clientModel->select();
+        ui-> clientTreeView->resizeColumnToContents(0);
+        ui-> clientTreeView->resizeColumnToContents(1);
+        ui-> clientTreeView->resizeColumnToContents(2);
+        ui-> clientTreeView->resizeColumnToContents(3);
+        ui-> clientTreeView->resizeColumnToContents(4);
     }
 }
 
@@ -199,35 +233,6 @@ void ClientManager::SearchObj()
     return;
 }
 
-//생성자에서 진행시 chatserver와 연동의 서순 문제가 발생, 멤버함수로 구현
-void ClientManager::loadData()
-{
-    QSqlDatabase db = QSqlDatabase::database();
-    db.setDatabaseName("clientlist.db");
-    if (db.open( )) {
-        QSqlQuery query;
-        query.exec("CREATE TABLE IF NOT EXISTS client(id INTEGER Primary Key, name VARCHAR(30) NOT NULL, phoneNumber VARCHAR(20) NOT NULL, address VARCHAR(50));");
-
-        clientModel = new QSqlTableModel();
-        clientModel->setTable("client");
-        clientModel->select();
-        clientModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
-        clientModel->setHeaderData(1, Qt::Horizontal, tr("Name"));
-        clientModel->setHeaderData(2, Qt::Horizontal, tr("Phone Number"));
-        clientModel->setHeaderData(3, Qt::Horizontal, tr("Address"));
-
-        ui->tableView->setModel(clientModel);
-        ui->tableView->resizeColumnsToContents();
-    }
-
-    for(int i = 0; i < clientModel->rowCount(); i++) {
-        int id = clientModel->data(clientModel->index(i, 0)).toInt();
-        QString name = clientModel->data(clientModel->index(i, 1)).toString();
-        //clientList.insert(id, clientModel->index(i, 0));
-        emit clientAdded(id, name);
-    }
-}
-
 //고객 한명의 정보를 리턴하는 함수
 Client* ClientManager::TossObj(int id)
 {
@@ -244,26 +249,32 @@ Client* ClientManager::TossObj(int id)
 
 void ClientManager::showContextMenu(const QPoint &pos)
 {
-    QPoint globalPos = ui->clientTreeWidget->mapToGlobal(pos);
+    QPoint globalPos = ui->clientTreeView->mapToGlobal(pos);
     menu->exec(globalPos);
 }
 
 //선택한 항목 속성 값 라인에디터에 표시
-void ClientManager::on_clientTreeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void ClientManager::on_clientTreeView_clicked(const QModelIndex &index)
 {
-    Q_UNUSED(column);
-    ui->clientInputIDText->setText(item->text(0));
-    ui->clientInputNameText->setText(item->text(1));
-    ui->clientInputPHText->setText(item->text(2));
-    ui->clientInputAddressText->setText(item->text(3));
-    ui->clientInputEmailText->setText(item->text(4));
+    QString id = clientModel->data(index.siblingAtColumn(0)).toString();
+    QString name = clientModel->data(index.siblingAtColumn(1)).toString();
+    QString phoneNumber = clientModel->data(index.siblingAtColumn(2)).toString();
+    QString address = clientModel->data(index.siblingAtColumn(3)).toString();
+    QString email = clientModel->data(index.siblingAtColumn(4)).toString();
+
+    ui->clientInputIDText->setText(id);
+    ui->clientInputNameText->setText(name);
+    ui->clientInputPHText->setText(phoneNumber);
+    ui->clientInputAddressText->setText(address);
+    ui->clientInputEmailText->setText(email);
 }
+
 
 void ClientManager::resetSearchResult()
 {
     ui -> clientSearchText-> clear();
-    for (auto itr = clientList.begin(); itr != clientList.end(); itr++)
-    {
-        itr.value()->setHidden(false);
-    }
+    clientModel->setFilter("");
+    clientModel->select();
 }
+
+
