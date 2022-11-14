@@ -2,14 +2,8 @@
 #define CLIENTMANAGER_H
 
 #include <iostream>
-#include <QMap>
-#include <vector>
-#include <fstream>
-#include <sstream>
 #include <QWidget>
 #include <QString>
-
-#include "Client.h"
 
 using std::cout;
 using std::cin;
@@ -28,7 +22,6 @@ class ClientManager : public QWidget
     Q_OBJECT
 
 private:
-    int idHistory;
     Ui::ClientManager *ui;
     QMenu* menu;
     QSqlTableModel* clientModel;

@@ -1,9 +1,7 @@
 #include <iostream>
 #include <QString>
 #include <iomanip>
-#include <stdio.h>
 #include <QDebug>
-#include <QFile>
 #include <QMap>
 #include <QMessageBox>
 #include <QMenu>
@@ -53,7 +51,7 @@ void ClientManager::loadData()
     QSqlDatabase db = QSqlDatabase::database();
     db.setDatabaseName("clientlist.db");
     if (db.open( )) {
-        QSqlQuery query;
+        QSqlQuery query(db);
         query.exec("CREATE TABLE IF NOT EXISTS client"
                    "(id INTEGER Primary Key,"
                    "name VARCHAR(20) NOT NULL,"
