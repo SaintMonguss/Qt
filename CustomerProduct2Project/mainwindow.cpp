@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     chatServerForm = new ChatServerForm;
     clientManager = new ClientManager;
     productManager = new ProductManager;
-    orderManager = new OrderManager(clientManager,productManager);
+    orderManager = new OrderManager;
 
 
     ui -> tabWidget->setIconSize(QSize(50,50));

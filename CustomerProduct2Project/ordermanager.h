@@ -26,7 +26,7 @@ private:
     QSqlTableModel* orderModel;
 
 public:
-    OrderManager();
+    explicit OrderManager(QWidget *parent = nullptr);
     ~OrderManager();
 
 private slots:

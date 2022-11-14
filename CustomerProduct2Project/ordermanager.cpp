@@ -2,14 +2,16 @@
 #include "ui_ordermanager.h"
 
 #include <iostream>
-#include <string>
+#include <QString>
 #include <iomanip>
-#include <windows.h>
 #include <QMessageBox>
 #include <QMenu>
+#include <QDebug>
+#include <QSqlQuery>
+#include <QSqlTableModel>
 
 // 생성자 파일 불러오기
-OrderManager::OrderManager(ClientManager* CM, ProductManager* PM) : CM(CM), PM(PM) ,
+OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
     ui(new Ui::OrderManager)
 {
     ui->setupUi(this);
@@ -20,35 +22,45 @@ OrderManager::OrderManager(ClientManager* CM, ProductManager* PM) : CM(CM), PM(P
     menu = new QMenu;
     menu -> addAction(removeAction);
     ui -> orderTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
+    //커스텀 슬롯 구현
     connect(ui -> orderTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SerchObj()));
     connect(ui -> orderModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui -> orderInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> orderResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
 
-    QFile file("orderlist.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+    //DB 관련 선언부
+    QSqlDatabase db = QSqlDatabase::database();
+    db.setDatabaseName("orderlist.db");
+    if (db.open( )) {
+        QSqlQuery query(db);
+        query.exec("CREATE TABLE IF NOT EXISTS order"
+                   "(id INTEGER Primary Key,"
+                   "clientId INTEGER NOT NULL,"
+                   "clientName VARCHAR(20) NOT NULL,"
+                   "productName VARCHAR(40) NOT NULL,"
+                   "date VARCHAR(30) NOT NULL,"
+                   "orderPrice INTEGER NOT NULL,"
+                   "orderStock INTEGER NOT NULL;");
+        //ID값 시퀀스 선언
+        // 버그 가능성 있음
+        query.exec("CREATE SEQUENCE IF NOT EXISTS seq_order_id"
+                   "INCREMENT BY 1 "
+                   "START WITH 1 ;");
+        orderModel = new QSqlTableModel();
+        orderModel->setTable("order");
+        orderModel->setFilter("");
+        orderModel->select();
+        orderModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
+        orderModel->setHeaderData(1, Qt::Horizontal, tr("clientId"));
+        orderModel->setHeaderData(2, Qt::Horizontal, tr("clientName"));
+        orderModel->setHeaderData(3, Qt::Horizontal, tr("productName"));
+        orderModel->setHeaderData(4, Qt::Horizontal, tr("date"));
+        orderModel->setHeaderData(5, Qt::Horizontal, tr("orderPrice"));
+        orderModel->setHeaderData(4, Qt::Horizontal, tr("orderStock"));
 
-    QTextStream in(&file);
-    idHistory = in.readLine().toInt(); // 아이디 히스토리 유지
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QList<QString> row = line.split(", ");
-        if (row.size()) {
-            int id = row[0].toInt();
-            int clientId = row[1].toInt();
-            QString clientName = row[2];
-            QString productName = row[3];
-            int date = row[4].toInt();
-            int orderPrice = row[5].toInt();
-            int orderStock = row[6].toInt();
-            Order* c = new Order(id, clientId, clientName, productName, date,  orderPrice, orderStock);
-            orderList.insert( id, c );
-        }
-    }
-    file.close();
+        ui-> orderTreeView -> setModel(orderModel);
+        ui-> orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 };
 
 //소멸자 파일 저장

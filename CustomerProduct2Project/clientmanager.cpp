@@ -1,16 +1,15 @@
+#include "clientmanager.h"
+#include "ui_clientmanager.h"
+
 #include <iostream>
 #include <QString>
 #include <iomanip>
 #include <QDebug>
-#include <QMap>
 #include <QMessageBox>
 #include <QMenu>
 #include <QPixmap>
 #include <QSqlQuery>
 #include <QSqlTableModel>
-
-#include "clientmanager.h"
-#include "ui_clientmanager.h"
 
 ClientManager::ClientManager(QWidget *parent) :
     QWidget(parent),

@@ -1,18 +1,15 @@
+#include "productmanager.h"
+#include "ui_productmanager.h"
+
 #include <iostream>
 #include <QString>
 #include <iomanip>
-#include <stdio.h>
 #include <QDebug>
-#include <QFile>
-#include <QMap>
 #include <QMessageBox>
 #include <QMenu>
 #include <QPixmap>
 #include <QSqlQuery>
 #include <QSqlTableModel>
-
-#include "productmanager.h"
-#include "ui_productmanager.h"
 
 ProductManager::ProductManager(QWidget *parent) :
     QWidget(parent),
