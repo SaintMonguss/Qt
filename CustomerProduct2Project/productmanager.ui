@@ -53,7 +53,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_3">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_2">
         <attribute name="title">
@@ -85,7 +85,7 @@
                <item>
                 <widget class="QLineEdit" name="productInputIDText">
                  <property name="readOnly">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>
@@ -353,7 +353,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset>
+              <iconset resource="resource.qrc">
                <normaloff>:/images/eraser2.png</normaloff>:/images/eraser2.png</iconset>
              </property>
              <property name="iconSize">
@@ -397,6 +397,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
