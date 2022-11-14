@@ -25,7 +25,7 @@ ClientManager::ClientManager(QWidget *parent) :
     menu = new QMenu;
     menu->addAction(removeAction);
     ui->clientTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
-
+    //커스텀 슬롯 연결부
     connect(ui-> clientTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui -> clientSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> clientModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
@@ -46,6 +46,7 @@ ClientManager::~ClientManager()
 }
 
 //생성자에서 진행시 chatserver와 연동의 서순 문제가 발생, 멤버함수로 구현
+// DB관련 구현부
 void ClientManager::loadData()
 {
     QSqlDatabase db = QSqlDatabase::database();
@@ -59,7 +60,7 @@ void ClientManager::loadData()
                    "address VARCHAR(50),"
                    "email VARCHAR(20),"
                    "iswithdrow BOOLEAN NOT NULL CHECK (iswithdrow IN (0, 1);");
-        //ID값 프로시져 선언
+        //ID값 시퀀스 선언
         // 버그 가능성 있음
         query.exec("CREATE SEQUENCE IF NOT EXISTS seq_client_id"
                    "INCREMENT BY 1 "
@@ -165,7 +166,6 @@ void ClientManager::ModiObj()
             clientModel->setData(index.siblingAtColumn(3), address);
             clientModel->setData(index.siblingAtColumn(4), email);
             clientModel->submit();
-            clientModel->setFilter("iswithdrow = 0");
             clientModel->select();
 
             ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -184,7 +184,7 @@ void ClientManager::SearchObj()
     QString search = ui->clientSearchText->text();
     if (target == tr("ID"))
     {
-        clientModel -> setFilter(QString("iswithdrow = 0 and id like '%%1%'").arg(search));
+        clientModel -> setFilter(QString("iswithdrow = 0 and id like '%%1%'").arg(search.toInt()));
         clientModel -> select();
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }

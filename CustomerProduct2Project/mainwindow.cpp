@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     connect(clientManager, SIGNAL(clientAdded(int, QString)),
-            chatServerForm, SLOT(addClient(int, QString)));
+            chatServerForm, SLOT(addClient(int, QString)), Qt::QueuedConnection);
     clientManager -> loadData();
 
 }

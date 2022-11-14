@@ -53,7 +53,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_3">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="m_customerAddTab_2">
         <attribute name="title">
@@ -353,7 +353,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="resource.qrc">
+              <iconset>
                <normaloff>:/images/eraser2.png</normaloff>:/images/eraser2.png</iconset>
              </property>
              <property name="iconSize">
@@ -397,8 +397,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -27,12 +27,13 @@ ProductManager::ProductManager(QWidget *parent) :
     menu->addAction(removeAction);
     ui->productTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    //커스텀 슬롯 연결
     connect(ui-> productTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui -> productSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> productModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui-> productInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> productResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
-
+    //DB 관련 선언부
     QSqlDatabase db = QSqlDatabase::database();
     db.setDatabaseName("productlist.db");
     if (db.open( )) {
@@ -41,10 +42,10 @@ ProductManager::ProductManager(QWidget *parent) :
                    "(id INTEGER Primary Key,"
                    "name VARCHAR(40) NOT NULL,"
                    "brand VARCHAR(40) NOT NULL,"
-                   "price VARCHAR(20),"
-                   "stock VARCHAR(20),"
+                   "price INTEGER,"
+                   "stock INTEGER,"
                    "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1);");
-        //ID값 프로시져 선언
+        //ID값 시퀀스 선언
         // 버그 가능성 있음
         query.exec("CREATE SEQUENCE IF NOT EXISTS seq_product_id"
                    "INCREMENT BY 1 "
@@ -67,46 +68,25 @@ ProductManager::ProductManager(QWidget *parent) :
 ProductManager::~ProductManager()
 {
     delete ui;
-
-    //파일 저장
-    QFile file("productlist.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-
-    QTextStream out(&file);
-    out << idHistory << "\n";
-    for (const auto& v : productList) {
-        Product* p = v;
-        out << QString::number(p->GetId()) << ", ";
-        out << p->GetName() << ", ";
-        out << p->GetBrand() << ", ";
-        out << QString::number(p->GetPrice()) << ", ";
-        out << QString::number(p->GetStock()) << "\n";
+    QSqlDatabase db = productModel->database();
+    if(db.isOpen())
+    {
+        productModel->submitAll();
+        db.close();
     }
-    file.close( );
 }
 
 
-//고객 정보 추가
+//상품 정보 추가
 void ProductManager::AddObj()
 {
-    Product* product;
-    int id;
+    QString name, brand;
+    int price, stock;
 
     if(ui -> productInputIDText->text() != "")
     {
-        QMessageBox::information(this, "임의의 ID 입력 감지", "새 상품 등록시에는 ID 입력 금지");
+        QMessageBox::information(this, "ID 입력 금지", "신규 상품 등록시에는 ID 입력 금지");
         return;
-    }
-
-    if (productList.empty())
-    {
-        idHistory  = id = 1;
-    }
-    else
-    {
-        id = idHistory + 1;
-        idHistory += 1;
     }
     if(
             ui -> productInputNameText->text() != "" &&
@@ -114,43 +94,44 @@ void ProductManager::AddObj()
             ui -> productInputPriceText->text() != "" &&
             ui -> productInputStockText->text() != "")
     {
-        product = new Product(id);
-        product->SetName(ui -> productInputNameText->text());
-        product->SetBrand(ui -> productInputBrandText -> text());
-        product->SetPrice(ui -> productInputPriceText -> text().toInt());
-        product->SetStock(ui -> productInputStockText -> text().toInt());
-        productList.insert(id, product );
-        ui -> productTreeWidget ->addTopLevelItem(product);
-        ui -> productTreeWidget -> update();
-        return;
-    }
+        name = ui -> productInputNameText->text();
+        brand = ui -> productInputBrandText->text();
+        price = ui -> productInputPriceText->text().toInt();
+        stock = ui -> productInputStockText->text().toInt();
 
+        QSqlQuery query(productModel->database());
+        query.prepare("INSERT INTO client VALUES (seq_product_id.nextval, ?, ?, ?, ?, 0)");
+        query.bindValue(1, name);
+        query.bindValue(2, brand);
+        query.bindValue(3, price);
+        query.bindValue(4, stock);
+        query.exec();
+        productModel->setFilter("isdelete = 0");
+        productModel->select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     ui -> productInputNameText-> clear();
     ui -> productInputBrandText -> clear();
     ui -> productInputPriceText -> clear();
     ui -> productInputStockText -> clear();
-
     return;
 }
 
-// 고객 정보 삭제
+//상품 정보 삭제
 void ProductManager::DelObj()
 {
-    QTreeWidgetItem* item = ui->productTreeWidget->currentItem();
-    if(item != nullptr) {
-        productList.remove(item->text(0).toInt());
-        ui->productTreeWidget->takeTopLevelItem(ui->productTreeWidget->indexOfTopLevelItem(item));
-//        delete item;
-        ui->productTreeWidget->update();
-        return;
+    QModelIndex index = ui -> productTreeView -> currentIndex();
+    if(index.isValid())
+    {
+        productModel->setData(index.siblingAtColumn(5), 1);
+        productModel->select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
 }
 
-// 고객 정보 수정
+//상품 정보 수정
 void ProductManager::ModiObj()
 {
-    int id;
-    Product* product;
     if(
             ui -> productInputIDText->text() != "" &&
             ui -> productInputNameText->text() != "" &&
@@ -158,122 +139,112 @@ void ProductManager::ModiObj()
             ui -> productInputPriceText->text() != "" &&
             ui -> productInputStockText->text() != "")
     {
-        id = (ui -> productInputIDText->text()).toInt();
-        if(productList.find(id) == productList.end())
+        QModelIndex index = ui->productTreeView->currentIndex();
+        if(index.isValid())
         {
-            QMessageBox::information(this, "안내", "해당 하는 ID의 상품이 없습니다.");
-            return;
-        }
+            QString name, brand;
+            int price, stock;
+            name = ui-> productInputNameText->text();
+            brand = ui-> productInputBrandText->text();
+            price = ui-> productInputPriceText->text().toInt();
+            stock = ui -> productInputStockText->text().toInt();
 
-        product = productList.find(id).value();			// 찾아서 클라이언트 객체를 할당
-        product->SetName(ui -> productInputNameText->text());
-        product->SetBrand(ui -> productInputBrandText->text());
-        product->SetPrice(ui -> productInputPriceText->text().toInt());
-        product->SetStock(ui -> productInputStockText->text().toInt());
+            productModel->setData(index.siblingAtColumn(1), name);
+            productModel->setData(index.siblingAtColumn(2), brand);
+            productModel->setData(index.siblingAtColumn(3), price);
+            productModel->setData(index.siblingAtColumn(4), stock);
+            productModel->submit();
+            productModel->select();
+
+            ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        }
+        else
+            QMessageBox::information(this, "안내", "수정 하고자 하는 상품의 모든 정보를 입력해 주세요.");
         return;
     }
-    else
-        QMessageBox::information(this, "안내", "수정 하고자 하는 상품의 모든 정보를 입력해 주세요.");
-    return;
-
 }
 
-// 고객 정보 검색
+//상품 정보 검색
 void ProductManager::SearchObj()
-{;
+{
     QString target = ui-> productComboBox->currentText();
+    QString search = ui-> productSearchText->text();
     if (target == tr("ID"))
-        for (auto itr = productList.begin(); itr != productList.end(); itr++)
-        {
-            if (itr.value()->GetId() == ui-> productSearchText->text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        productModel -> setFilter(QString("isdelete = 0 and id like '%%1%'").arg(search.toInt()));
+        productModel -> select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("name"))
-        for (auto itr = productList.begin(); itr != productList.end(); itr++)
-        {
-            if (itr.value()->GetName() == ui->productSearchText->text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        productModel -> setFilter(QString("isdelete = 0 and name like '%%1%'").arg(search));
+        productModel -> select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("brand"))
-        for (auto itr = productList.begin(); itr != productList.end(); itr++)
-        {
-            if (itr.value()->GetBrand() == ui->productSearchText -> text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        productModel -> setFilter(QString("isdelete = 0 and brand like '%%1%'").arg(search));
+        productModel -> select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("price"))
-        for (auto itr = productList.begin(); itr != productList.end(); itr++)
-        {
-            if (itr.value()->GetPrice() == ui -> productSearchText -> text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        productModel -> setFilter(QString("isdelete = 0 and price = '%%1%'").arg(search.toInt()));
+        productModel -> select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("stock"))
-        for (auto itr = productList.begin(); itr != productList.end(); itr++)
-        {
-            if (itr.value()->GetStock() == ui -> productSearchText ->text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        productModel -> setFilter(QString("isdelete = 0 and stock = '%%1%'").arg(search.toInt()));
+        productModel -> select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     return;
 }
 
-
-
-//고객 한명의 정보를 리턴하는 함수
-Product* ProductManager::TossObj(int id)
+//상품 한명의 정보를 리턴하는 함수
+void ProductManager::TossProductInfo(int id)
 {
-    Product* product =nullptr;
-    try
-    {
-        if(productList.find(id) == productList.end())
-            throw;
+    QModelIndexList indexes = productModel->match(productModel->index(0, 0), Qt::EditRole, id, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
+
+    foreach(auto index, indexes) {
+        QString name = productModel->data(index.siblingAtColumn(1)).toString();
+        QString brand = productModel->data(index.siblingAtColumn(2)).toString();
+        int price = productModel->data(index.siblingAtColumn(3)).toInt();
+        int stock = productModel->data(index.siblingAtColumn(4)).toInt();
+
+        emit sendProductInfo(name, brand, price, stock);
     }
-    catch (...)
-    {
-        qDebug() << "해당하는 ID 없음";
-        return product;
-    }
-    product = productList.find(id).value();
-    return product;
 }
 //선택시 메뉴 열리기
 
 void ProductManager::showContextMenu(const QPoint &pos)
 {
-    QPoint globalPos = ui->productTreeWidget->mapToGlobal(pos);
+    QPoint globalPos = ui->productTreeView->mapToGlobal(pos);
     menu->exec(globalPos);
 }
 
 //선택한 항목 속성 값 라인에디터에 표시
-void ProductManager::on_productTreeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void ProductManager::on_productTreeView_clicked(const QModelIndex &index)
 {
-    Q_UNUSED(column);
-    ui->productInputIDText->setText(item->text(0));
-    ui->productInputNameText->setText(item->text(1));
-    ui->productInputBrandText->setText(item->text(2));
-    ui->productInputPriceText->setText(item->text(3));
-    ui->productInputStockText->setText(item->text(4));
+    QString id = productModel->data(index.siblingAtColumn(0)).toString();
+    QString name = productModel->data(index.siblingAtColumn(1)).toString();
+    QString brand = productModel->data(index.siblingAtColumn(2)).toString();
+    QString price = productModel->data(index.siblingAtColumn(3)).toString();
+    QString stock = productModel->data(index.siblingAtColumn(4)).toString();
+
+    ui->productInputIDText->setText(id);
+    ui->productInputNameText->setText(name);
+    ui->productInputBrandText->setText(brand);
+    ui->productInputPriceText->setText(price);
+    ui->productInputStockText->setText(stock);
 }
+
 
 void ProductManager::resetSearchResult()
 {
     ui -> productSearchText-> clear();
-    for (auto itr = productList.begin(); itr != productList.end(); itr++)
-    {
-        itr.value()->setHidden(false);
-    }
+    productModel->setFilter("isdelete = 0");
+    productModel->select();
+    ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
-
-void ProductManager::on_productTreeView_clicked(const QModelIndex &index)
-{
-
-}
-

@@ -30,6 +30,9 @@ public:
     explicit ProductManager(QWidget *parent = nullptr);
     ~ProductManager();
 
+signals:
+    void sendProductInfo(QString, QString, int, int);
+
 private slots:
     void resetSearchResult();
     void on_productTreeView_clicked(const QModelIndex &index);
