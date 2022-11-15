@@ -21,9 +21,9 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
 
     menu = new QMenu;
     menu -> addAction(removeAction);
-    ui -> orderTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui -> orderTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     //커스텀 슬롯 구현
-    connect(ui -> orderTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui -> orderTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SerchObj()));
     connect(ui -> orderModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui -> orderInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
@@ -38,6 +38,7 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
                    "(id INTEGER Primary Key,"
                    "clientId INTEGER NOT NULL,"
                    "clientName VARCHAR(20) NOT NULL,"
+                   "productId INTEGER NOT NULL,"
                    "productName VARCHAR(40) NOT NULL,"
                    "date VARCHAR(30) NOT NULL,"
                    "orderPrice INTEGER NOT NULL,"
@@ -54,95 +55,124 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
         orderModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
         orderModel->setHeaderData(1, Qt::Horizontal, tr("clientId"));
         orderModel->setHeaderData(2, Qt::Horizontal, tr("clientName"));
-        orderModel->setHeaderData(3, Qt::Horizontal, tr("productName"));
-        orderModel->setHeaderData(4, Qt::Horizontal, tr("date"));
-        orderModel->setHeaderData(5, Qt::Horizontal, tr("orderPrice"));
-        orderModel->setHeaderData(4, Qt::Horizontal, tr("orderStock"));
+        orderModel->setHeaderData(3, Qt::Horizontal, tr("productId"));
+        orderModel->setHeaderData(4, Qt::Horizontal, tr("productName"));
+        orderModel->setHeaderData(5, Qt::Horizontal, tr("date"));
+        orderModel->setHeaderData(6, Qt::Horizontal, tr("orderPrice"));
+        orderModel->setHeaderData(7, Qt::Horizontal, tr("orderStock"));
 
         ui-> orderTreeView -> setModel(orderModel);
         ui-> orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-};
+    }
+}
 
 //소멸자 파일 저장
 OrderManager::~OrderManager()
 {
     delete ui;
-
-    //파일 저장
-    QFile file("orderlist.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-    QTextStream out(&file);
-    out << idHistory << "\n";
-        for (const auto& v : orderList) {
-            Order* c = v;
-            out << QString::number(c -> GetOrderId()) << ", ";
-            out << c -> GetProductName() << ", ";
-            out << c -> GetClientName() << ", ";
-            out << QString::number(c -> GetDate()) << ", ";
-            out << QString::number(c->GetClientId()) << ", ";
-            out << QString::number(c->GetOrderPrice()) << ", ";
-            out << QString::number(c->GetOrderStock()) << "\n";
-        }
-    file.close();
+    QSqlDatabase db = orderModel->database();
+    if(db.isOpen())
+    {
+        orderModel->submitAll();
+        db.close();
+    }
 }
 
 
 
 //주문 정보 추가
+//void OrderManager::AddObj()
+//{
+//    Order* order;
+//    int id;
+
+//    if(ui -> orderInputIdText->text() != "")
+//    {
+//        QMessageBox::information(this, "ID 입력 금지", "신규 주문 등록시에는 ID 입력 금지");
+//        return;
+//    }
+//    if(
+//            ui -> orderInputClientIdText->text() != "" &&
+//            ui -> orderInputProductNameText->text() != "" &&
+//            ui -> orderInputDateText->text() != "" &&
+//            ui -> orderInputOrderPriceText->text() != "" &&
+//            ui -> orderInputOrderStockText->text() != ""
+//            )
+//    {
+//        // 널 포인터 체크 - 존재하지 않는 고객 ID 입력시 널 포인트가 반환될 가능성
+//        if(CM -> TossObj(ui -> orderInputClientIdText->text().toInt()) == nullptr )
+//        {
+//            QMessageBox::information(this, "안내", "해당 하는 ID의 고객이 없습니다.");
+//            return;
+//        }
+//        if (orderList.empty())
+//        {
+//            idHistory  = id = 1;
+//        }
+//        else
+//        {
+//            id = idHistory + 1;
+//            idHistory += 1;
+//        }
+//        order = new Order(id);
+//        order -> SetClientId((ui -> orderInputClientIdText->text()).toInt());
+//        order -> SetProductName(ui -> orderInputProductNameText->text());
+//        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
+//        order -> SetDate(ui -> orderInputDateText -> text().toInt());
+//        order -> SetOrderPrice(ui -> orderInputOrderPriceText -> text().toInt());
+//        order -> SetClientName(CM -> TossObj(order->GetClientId()) -> GetName());
+
+//        orderList.insert(id, order);
+//        ui -> orderTreeWidget ->addTopLevelItem(order);
+//        ui -> orderTreeWidget -> update();
+//        return;
+//    }
+//    ui -> orderInputClientIdText-> clear();
+//    ui -> orderInputProductNameText -> clear();
+//    ui -> orderInputOrderStockText -> clear();
+//    ui -> orderInputOrderPriceText -> clear();
+//    ui -> orderInputOrderStockText -> clear();
+//    ui -> orderInputDateText -> clear();
+
+//    return;
+//}
+
 void OrderManager::AddObj()
 {
-    Order* order;
-    int id;
+    QString clientName, productName, date;
+    int clientId, productId, orderPrice, orderStock;
 
     if(ui -> orderInputIdText->text() != "")
     {
-        QMessageBox::information(this, "ID 입력 금지", "신규 주문 등록시에는 ID 입력 금지");
+        QMessageBox::information(this, "ID 입력 금지", "신규 주문내역 등록시에는 ID 입력 금지");
         return;
     }
     if(
             ui -> orderInputClientIdText->text() != "" &&
-            ui -> orderInputProductNameText->text() != "" &&
-            ui -> orderInputDateText->text() != "" &&
-            ui -> orderInputOrderPriceText->text() != "" &&
-            ui -> orderInputOrderStockText->text() != ""
-            )
+            ui -> orderInputProductIdText->text() != "" &&
+            ui -> productInputPriceText->text() != "" &&
+            ui -> productInputStockText->text() != "")
     {
-        // 널 포인터 체크 - 존재하지 않는 고객 ID 입력시 널 포인트가 반환될 가능성
-        if(CM -> TossObj(ui -> orderInputClientIdText->text().toInt()) == nullptr )
-        {
-            QMessageBox::information(this, "안내", "해당 하는 ID의 고객이 없습니다.");
-            return;
-        }
-        if (orderList.empty())
-        {
-            idHistory  = id = 1;
-        }
-        else
-        {
-            id = idHistory + 1;
-            idHistory += 1;
-        }
-        order = new Order(id);
-        order -> SetClientId((ui -> orderInputClientIdText->text()).toInt());
-        order -> SetProductName(ui -> orderInputProductNameText->text());
-        order -> SetOrderStock(ui -> orderInputOrderStockText -> text().toInt());
-        order -> SetDate(ui -> orderInputDateText -> text().toInt());
-        order -> SetOrderPrice(ui -> orderInputOrderPriceText -> text().toInt());
-        order -> SetClientName(CM -> TossObj(order->GetClientId()) -> GetName());
+        name = ui -> productInputNameText->text();
+        brand = ui -> productInputBrandText->text();
+        price = ui -> productInputPriceText->text().toInt();
+        stock = ui -> productInputStockText->text().toInt();
 
-        orderList.insert(id, order);
-        ui -> orderTreeWidget ->addTopLevelItem(order);
-        ui -> orderTreeWidget -> update();
-        return;
+        QSqlQuery query(productModel->database());
+        query.prepare("INSERT INTO client VALUES (seq_product_id.nextval, ?, ?, ?, ?, 0)");
+        query.bindValue(1, name);
+        query.bindValue(2, brand);
+        query.bindValue(3, price);
+        query.bindValue(4, stock);
+        query.exec();
+        productModel->setFilter("isdelete = 0");
+        productModel->select();
+        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
-    ui -> orderInputClientIdText-> clear();
-    ui -> orderInputProductNameText -> clear();
-    ui -> orderInputOrderStockText -> clear();
-    ui -> orderInputOrderPriceText -> clear();
-    ui -> orderInputOrderStockText -> clear();
-    ui -> orderInputDateText -> clear();
-
+    ui -> productInputNameText-> clear();
+    ui -> productInputBrandText -> clear();
+    ui -> productInputPriceText -> clear();
+    ui -> productInputStockText -> clear();
     return;
 }
 

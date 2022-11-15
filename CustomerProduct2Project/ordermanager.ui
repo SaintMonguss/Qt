@@ -117,12 +117,12 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>productName</string>
+                <string>productId</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="orderInputProductNameText"/>
+              <widget class="QLineEdit" name="orderInputProductIdText"/>
              </item>
             </layout>
            </item>
@@ -261,12 +261,17 @@
            </item>
            <item>
             <property name="text">
+             <string>clientID</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>clientName</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>clientID</string>
+             <string>productId</string>
             </property>
            </item>
            <item>
