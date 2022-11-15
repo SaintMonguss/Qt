@@ -150,8 +150,8 @@ void OrderManager::AddObj()
     if(
             ui -> orderInputClientIdText->text() != "" &&
             ui -> orderInputProductIdText->text() != "" &&
-            ui -> productInputPriceText->text() != "" &&
-            ui -> productInputStockText->text() != "")
+            ui -> orderInputDateText->text() != "" &&
+            ui -> orderInputOrderStockText->text() != "")
     {
         name = ui -> productInputNameText->text();
         brand = ui -> productInputBrandText->text();
