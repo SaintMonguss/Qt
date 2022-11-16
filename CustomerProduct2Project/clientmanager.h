@@ -33,7 +33,7 @@ public:
 
 signals:
     void clientAdded(int, QString);
-    void sendClientInfo(QString, QString, QString, QString);
+    void tossClientInfo(QString, QString, QString, QString);
 
 private slots:
     void resetSearchResult();
@@ -45,7 +45,7 @@ public slots:
     void DelObj();
     void ModiObj();
     void SearchObj( );
-    void TossClientInfo(int);
+    void acceptClientInfoRequest(int);
 };
 
 #endif // CLIENTMANAGER_H

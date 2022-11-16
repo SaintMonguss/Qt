@@ -37,11 +37,11 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
         query.exec("CREATE TABLE IF NOT EXISTS order"
                    "(id INTEGER Primary Key,"
                    "clientId INTEGER NOT NULL,"
-                   "clientName VARCHAR(20) NOT NULL,"
+                   "clientName VARCHAR(20),"
                    "productId INTEGER NOT NULL,"
-                   "productName VARCHAR(40) NOT NULL,"
+                   "productName VARCHAR(40),"
                    "date VARCHAR(30) NOT NULL,"
-                   "orderPrice INTEGER NOT NULL,"
+                   "orderPrice INTEGER,"
                    "orderStock INTEGER NOT NULL;");
         //ID값 시퀀스 선언
         // 버그 가능성 있음
@@ -140,7 +140,7 @@ OrderManager::~OrderManager()
 void OrderManager::AddObj()
 {
     QString clientName, productName, date;
-    int clientId, productId, orderPrice, orderStock;
+    int orderId, clientId, productId, orderStock;
 
     if(ui -> orderInputIdText->text() != "")
     {
@@ -153,22 +153,30 @@ void OrderManager::AddObj()
             ui -> orderInputDateText->text() != "" &&
             ui -> orderInputOrderStockText->text() != "")
     {
-        name = ui -> productInputNameText->text();
-        brand = ui -> productInputBrandText->text();
-        price = ui -> productInputPriceText->text().toInt();
-        stock = ui -> productInputStockText->text().toInt();
+        clientId = ui -> orderInputClientIdText->text().toInt();
+        productId = ui -> orderInputProductIdText -> text().toInt();
+        date = ui -> orderInputDateText->text();
+        orderStock = ui -> orderInputOrderStockText -> text().toInt();
 
-        QSqlQuery query(productModel->database());
-        query.prepare("INSERT INTO client VALUES (seq_product_id.nextval, ?, ?, ?, ?, 0)");
-        query.bindValue(1, name);
-        query.bindValue(2, brand);
-        query.bindValue(3, price);
-        query.bindValue(4, stock);
+        QSqlQuery query(orderModel->database());
+        query.prepare("INSERT INTO order VALUES (seq_product_id.nextval, ?, ?, ?, ?, ?, ?)");
+        query.bindValue(1, clientId);
+        query.bindValue(3, productId);
+        query.bindValue(5, date);
+        query.bindValue(6, orderStock);
         query.exec();
-        productModel->setFilter("isdelete = 0");
-        productModel->select();
-        ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        orderId = query.boundValue(0).toInt();
+
+        emit requestClientInfo(orderId, clientId);
+        emit requestProductInfo(orderId, productId);
+
+        orderModel->setFilter("");
+        orderModel->select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
+
+
+
     ui -> productInputNameText-> clear();
     ui -> productInputBrandText -> clear();
     ui -> productInputPriceText -> clear();
@@ -344,3 +352,8 @@ void OrderManager::on_orderTreeView_clicked(const QModelIndex &index)
 
 }
 
+void OrderManager::receiveClientInfo(QString name, QString ph, QString address, QString email)
+{
+
+    //UPDATE 테이블명 SET 컬럼명 1 = 값1, 컬럼명2 = 값2, ... WHERE 조건식;
+}

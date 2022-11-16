@@ -28,5 +28,7 @@ private:
     ProductManager *productManager;
     OrderManager *orderManager;
     ChatServerForm *chatServerForm;
+
+
 };
 #endif // MAINWINDOW_H

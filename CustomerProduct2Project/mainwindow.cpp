@@ -24,11 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui -> tabWidget->insertTab(2, orderManager, QIcon(":/images/order2.png"), tr(""));
     ui -> tabWidget -> insertTab(4, chatServerForm, QIcon(":/images/chat.png"), tr(""));
 
-
     connect(clientManager, SIGNAL(clientAdded(int, QString)),
             chatServerForm, SLOT(addClient(int, QString)), Qt::QueuedConnection);
     clientManager -> loadData();
 
+    // orderManager의 정보 요청에 대한 반응 연결
+    connect(orderManager, SIGNAL(requestClientInfo(int)),
+            clientManager, SLOT(acceptClientInfoRequest(int)));
+    connect(clientManager, SIGNAL(tossClientInfo(QString, QString, QString, QString)),
+            orderManager, SLOT(receiveClientInfo(QString, QString, QString, QString)));
 }
 
 MainWindow::~MainWindow()
