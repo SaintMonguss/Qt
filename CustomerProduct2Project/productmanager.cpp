@@ -200,9 +200,9 @@ void ProductManager::SearchObj()
 }
 
 //상품 한명의 정보를 리턴하는 함수
-void ProductManager::TossProductInfo(int id)
+void ProductManager::TossProductInfo(int orderId, int productId)
 {
-    QModelIndexList indexes = productModel->match(productModel->index(0, 0), Qt::EditRole, id, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
+    QModelIndexList indexes = productModel->match(productModel->index(0, 0), Qt::EditRole, productId, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
     foreach(auto index, indexes) {
         QString name = productModel->data(index.siblingAtColumn(1)).toString();
@@ -210,7 +210,7 @@ void ProductManager::TossProductInfo(int id)
         int price = productModel->data(index.siblingAtColumn(3)).toInt();
         int stock = productModel->data(index.siblingAtColumn(4)).toInt();
 
-        emit sendProductInfo(name, brand, price, stock);
+        emit sendProductInfo(orderId, name, brand, price, stock);
     }
 }
 //선택시 메뉴 열리기

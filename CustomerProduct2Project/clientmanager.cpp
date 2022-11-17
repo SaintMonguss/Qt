@@ -215,7 +215,7 @@ void ClientManager::SearchObj()
 }
 
 //고객 한명의 정보를 리턴하는 함수
-void ClientManager::acceptClientInfoRequest(int id)
+void ClientManager::acceptClientInfoRequest(int orderId, int clientId)
 {
     QModelIndexList indexes = clientModel->match(clientModel->index(0, 0), Qt::EditRole, id, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
@@ -226,7 +226,7 @@ void ClientManager::acceptClientInfoRequest(int id)
         QString address = clientModel->data(index.siblingAtColumn(3)).toString();
         QString email = clientModel->data(index.siblingAtColumn(4)).toString();
 
-        emit tossClientInfo(name, phoneNumber, address, email);
+        emit sendClientInfo(orderId, name, phoneNumber, address, email);
     }
 }
 //선택시 메뉴 열리기

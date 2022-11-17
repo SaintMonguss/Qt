@@ -107,6 +107,26 @@
             </layout>
            </item>
            <item>
+            <layout class="QVBoxLayout" name="verticalLayout_56">
+             <item>
+              <widget class="QLabel" name="label_51">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>clientName</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="orderInputClientNameText"/>
+             </item>
+            </layout>
+           </item>
+           <item>
             <layout class="QVBoxLayout" name="verticalLayout_54">
              <item>
               <widget class="QLabel" name="label_48">

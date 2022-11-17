@@ -30,7 +30,7 @@ public:
     ~ProductManager();
 
 signals:
-    void sendProductInfo(QString, QString, int, int);
+    void sendProductInfo(int, QString, QString, int, int);
 
 private slots:
     void resetSearchResult();
@@ -42,7 +42,7 @@ public slots:
     void DelObj();
     void ModiObj();
     void SearchObj( );
-    void TossProductInfo(int);
+    void TossProductInfo(int, int);
 };
 
 #endif // PRODUCTMANAGER_H

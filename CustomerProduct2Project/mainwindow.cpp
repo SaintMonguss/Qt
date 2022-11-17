@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QSize>
+#include <QString>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -29,10 +30,16 @@ MainWindow::MainWindow(QWidget *parent)
     clientManager -> loadData();
 
     // orderManager의 정보 요청에 대한 반응 연결
-    connect(orderManager, SIGNAL(requestClientInfo(int)),
-            clientManager, SLOT(acceptClientInfoRequest(int)));
-    connect(clientManager, SIGNAL(tossClientInfo(QString, QString, QString, QString)),
-            orderManager, SLOT(receiveClientInfo(QString, QString, QString, QString)));
+    //client측
+    connect(orderManager, SIGNAL(requestClientInfo(int, int)),
+            clientManager, SLOT(acceptClientInfoRequest(int, int)));
+    connect(clientManager, SIGNAL(sendClientInfo(int, QString, QString, QString, QString)),
+            orderManager, SLOT(receiveClientInfo(int, QString, QString, QString, QString)));
+    //product측
+    connect(orderManager, SIGNAL(requestProductInfo(int, int)),
+            productManager, SLOT(acceptProductInfoRequest(int, int)));
+    connect(productManager, SIGNAL(sendProductInfo(int, QString, QString, QString, QString)),
+            orderManager, SLOT(receiveProductInfo(int, QString, QString, QString, QString)));
 }
 
 MainWindow::~MainWindow()
