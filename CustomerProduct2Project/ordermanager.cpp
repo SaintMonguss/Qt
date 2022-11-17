@@ -128,7 +128,6 @@ void OrderManager::AddObj()
 }
 
 // 주문 정보 삭제
-// 고객 정보 삭제
 void OrderManager::DelObj()
 {
     QModelIndex index = ui->orderTreeView->currentIndex();
