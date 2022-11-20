@@ -24,7 +24,7 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
     ui -> orderTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     //커스텀 슬롯 구현
     connect(ui -> orderTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
-    connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SerchObj()));
+    connect(ui -> orderSearchButton, SIGNAL(clicked()), SLOT(SearchObj()));
     connect(ui -> orderModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui -> orderInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> orderResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));

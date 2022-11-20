@@ -60,6 +60,7 @@ private slots:
     void receiveData( );
     void removeClient( );
     void addClient(int, QString);
+    void deleteClient(int, QString);
     void inviteClient();
     void kickOut();
     void on_chatClientTreeWidget_customContextMenuRequested(const QPoint &pos);

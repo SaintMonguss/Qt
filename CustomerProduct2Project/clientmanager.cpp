@@ -113,8 +113,9 @@ void ClientManager::AddObj()
         query.bindValue(3, address);
         query.bindValue(4, email);
         query.exec();
+        clientModel->setFilter("");
         id = (clientModel->rowCount());
-        //qDebug() << id;
+       //qDebug() << id;
         clientModel->setFilter("iswithdrow = 0");
         clientModel->select();
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -138,8 +139,11 @@ void ClientManager::DelObj()
     if(index.isValid())
     {
         clientModel->setData(index.siblingAtColumn(5), 1);
+        int id = clientModel -> data(index.siblingAtColumn(0)).toInt();
+        QString name = clientModel -> data(index.siblingAtColumn(1)).toString();
         clientModel->submit();
         clientModel->select();
+        emit clientDeleted(id, name);
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
 }

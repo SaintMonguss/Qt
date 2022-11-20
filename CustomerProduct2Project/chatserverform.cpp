@@ -37,7 +37,6 @@ ChatServerForm::ChatServerForm(QWidget *parent) :
         close( );
         return;
     }
-
     fileServer = new QTcpServer(this); // 파일 전송용 소켓
     connect(fileServer, SIGNAL(newConnection()), SLOT(acceptConnection()));
     if (!fileServer->listen(QHostAddress::Any, PORT_NUMBER+1)) {
@@ -201,11 +200,29 @@ void ChatServerForm::addClient(int id, QString name)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem(ui->chatClientTreeWidget);
     item->setText(0, "X");
-    item->setText(1, name);
+    item->setText(1, QString::number(id));
+    item->setText(2, name);
     ui->chatClientTreeWidget->addTopLevelItem(item);
     clientIDHash[name] = id;
     ui->chatClientTreeWidget->resizeColumnToContents(0);
 }
+
+void ChatServerForm::deleteClient(int id, QString name)
+{
+    //qDebug() << "작동중1";
+    if(clientIDHash.find(name) != clientIDHash.end())
+    {
+        //qDebug() << "작동중2";
+        foreach(auto item, ui->chatClientTreeWidget->findItems(QString::number(id), Qt::MatchContains, 1))
+        {
+            ui->chatClientTreeWidget->takeTopLevelItem(ui->chatClientTreeWidget->indexOfTopLevelItem(item));
+            //qDebug() << "작동중3";
+        }
+//        delete item;
+        ui->chatClientTreeWidget->update();
+    }
+}
+
 
 void ChatServerForm::on_chatClientTreeWidget_customContextMenuRequested(const QPoint &pos)
 {

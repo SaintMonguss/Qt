@@ -42,7 +42,7 @@ public slots:
     void DelObj();
     void ModiObj();
     void SearchObj( );
-    void TossProductInfo(int, int);
+    void acceptProductInfoRequest(int, int);
 };
 
 #endif // PRODUCTMANAGER_H

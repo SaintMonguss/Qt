@@ -25,8 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui -> tabWidget->insertTab(2, orderManager, QIcon(":/images/order2.png"), tr(""));
     ui -> tabWidget -> insertTab(4, chatServerForm, QIcon(":/images/chat.png"), tr(""));
 
+    //채팅 참여자 목록 추가/제거 연동에 관한 연결
     connect(clientManager, SIGNAL(clientAdded(int, QString)),
             chatServerForm, SLOT(addClient(int, QString)), Qt::QueuedConnection);
+    connect(clientManager, SIGNAL(clientDeleted(int, QString)),
+            chatServerForm, SLOT(deleteClient(int, QString)), Qt::QueuedConnection);
     clientManager -> loadData();
 
     // orderManager의 정보 요청에 대한 반응 연결
@@ -38,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
     //product측
     connect(orderManager, SIGNAL(requestProductInfo(int, int)),
             productManager, SLOT(acceptProductInfoRequest(int, int)));
-    connect(productManager, SIGNAL(sendProductInfo(int, QString, QString, QString, QString)),
-            orderManager, SLOT(receiveProductInfo(int, QString, QString, QString, QString)));
+    connect(productManager, SIGNAL(sendProductInfo(int, QString, QString, int, int)),
+            orderManager, SLOT(receiveProductInfo(int, QString, QString, int, int)));
 }
 
 MainWindow::~MainWindow()

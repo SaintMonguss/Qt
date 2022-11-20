@@ -33,7 +33,9 @@ public:
 
 signals:
     void clientAdded(int, QString);
+    void clientDeleted(int, QString);
     void sendClientInfo(int, QString, QString, QString, QString);
+
 
 private slots:
     void resetSearchResult();

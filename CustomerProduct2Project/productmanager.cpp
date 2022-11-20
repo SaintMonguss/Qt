@@ -202,7 +202,7 @@ void ProductManager::SearchObj()
 }
 
 //상품 한명의 정보를 리턴하는 함수
-void ProductManager::TossProductInfo(int orderId, int productId)
+void ProductManager::acceptProductInfoRequest(int orderId, int productId)
 {
     QModelIndexList indexes = productModel->match(productModel->index(0, 0), Qt::EditRole, productId, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
