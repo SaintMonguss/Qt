@@ -42,7 +42,7 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
                    "productName VARCHAR(40),"
                    "date VARCHAR(30) NOT NULL,"
                    "orderPrice INTEGER,"
-                   "orderStock INTEGER NOT NULL;");
+                   "orderStock INTEGER NOT NULL);");
         //ID값 시퀀스 선언
         // 버그 가능성 있음
         query.exec("CREATE SEQUENCE IF NOT EXISTS seq_order_id"
@@ -114,16 +114,19 @@ void OrderManager::AddObj()
         orderModel->setFilter("");
         orderModel->select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        ui -> orderInputIdText -> clear();
+        ui -> orderInputClientIdText-> clear();
+        ui -> orderInputClientNameText -> clear();
+        ui -> orderInputProductIdText-> clear();
+        ui -> orderInputDateText -> clear();
+        ui -> orderInputOrderPriceText -> clear();
+        ui -> orderInputOrderStockText -> clear();
+        return ;
+
     }
 
-    ui -> orderInputIdText -> clear();
-    ui -> orderInputClientIdText-> clear();
-    ui -> orderInputClientNameText -> clear();
-    ui -> orderInputProductIdText-> clear();
-    ui -> orderInputDateText -> clear();
-    ui -> orderInputOrderPriceText -> clear();
-    ui -> orderInputOrderStockText -> clear();
-
+    QMessageBox::information(this, "미기입 정보", "구매자 ID, 상품ID, 구매일, 수량은 반드시 기입해주세요");
     return;
 }
 

@@ -53,17 +53,12 @@ void ClientManager::loadData()
     if (db.open( )) {
         QSqlQuery query(db);
         query.exec("CREATE TABLE IF NOT EXISTS client"
-                   "(id INTEGER Primary Key,"
+                   "(id INTEGER Primary Key AUTOINCREMENT,"
                    "name VARCHAR(20) NOT NULL,"
                    "phoneNumber VARCHAR(20) NOT NULL,"
                    "address VARCHAR(50),"
                    "email VARCHAR(20),"
-                   "iswithdrow BOOLEAN NOT NULL CHECK (iswithdrow IN (0, 1);");
-        //ID값 시퀀스 선언
-        // 버그 가능성 있음
-        query.exec("CREATE SEQUENCE IF NOT EXISTS seq_client_id"
-                   "INCREMENT BY 1 "
-                   "START WITH 1 ;");
+                   "iswithdrow BOOLEAN NOT NULL CHECK (iswithdrow IN (0, 1)));");
         clientModel = new QSqlTableModel();
         clientModel->setTable("client");
         clientModel->setFilter("iswithdrow = 0");
@@ -96,6 +91,7 @@ void ClientManager::AddObj()
     if(ui -> clientInputIDText->text() != "")
     {
         QMessageBox::information(this, "ID 입력 금지", "신규 고객 등록시에는 ID 입력 금지");
+        ui -> clientInputIDText-> clear();
         return;
     }
     if(
@@ -110,32 +106,40 @@ void ClientManager::AddObj()
         email = ui -> clientInputEmailText->text();
 
         QSqlQuery query(clientModel->database());
-        query.prepare("INSERT INTO client VALUES (seq_client_id.nextval, ?, ?, ?, ?, 0)");
+        query.prepare("INSERT INTO client VALUES (?, ?, ?, ?, ?, 0)");
         query.bindValue(1, name);
         query.bindValue(2, phonNumber);
         query.bindValue(3, address);
         query.bindValue(4, email);
-        id = query.boundValue(0).toInt();
+        id = (clientModel->rowCount()) + 1;
+        qDebug() << id;
         query.exec();
         clientModel->setFilter("iswithdrow = 0");
         clientModel->select();
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
         emit clientAdded(id, ui -> clientInputNameText->text());
+
+        ui -> clientInputNameText-> clear();
+        ui -> clientInputPHText -> clear();
+        ui -> clientInputAddressText -> clear();
+        ui -> clientInputEmailText -> clear();
+        return;
     }
-    ui -> clientInputNameText-> clear();
-    ui -> clientInputPHText -> clear();
-    ui -> clientInputAddressText -> clear();
-    ui -> clientInputEmailText -> clear();
+
+    QMessageBox::information(this, "미기입 정보", "ID를 제외한 모든 정보를 입력해 주세요");
     return;
 }
 
 // 고객 정보 삭제
 void ClientManager::DelObj()
 {
+    qDebug() << "딜리트 함수";
     QModelIndex index = ui->clientTreeView->currentIndex();
     if(index.isValid())
     {
+        qDebug() << clientModel->data(index.siblingAtColumn(5));
         clientModel->setData(index.siblingAtColumn(5), 1);
+        clientModel->submit();
         clientModel->select();
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
@@ -166,6 +170,12 @@ void ClientManager::ModiObj()
             clientModel->setData(index.siblingAtColumn(4), email);
             clientModel->submit();
             clientModel->select();
+
+            ui -> clientInputIDText-> clear();
+            ui -> clientInputNameText-> clear();
+            ui -> clientInputPHText -> clear();
+            ui -> clientInputAddressText -> clear();
+            ui -> clientInputEmailText -> clear();
 
             ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
         }
@@ -253,7 +263,7 @@ void ClientManager::on_clientTreeView_clicked(const QModelIndex &index)
     ui->clientInputEmailText->setText(email);
 }
 
-
+//검색 시도 초기화
 void ClientManager::resetSearchResult()
 {
     ui -> clientSearchText-> clear();

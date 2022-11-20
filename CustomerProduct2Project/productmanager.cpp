@@ -41,7 +41,7 @@ ProductManager::ProductManager(QWidget *parent) :
                    "brand VARCHAR(40) NOT NULL,"
                    "price INTEGER,"
                    "stock INTEGER,"
-                   "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1);");
+                   "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1)));");
         //ID값 시퀀스 선언
         // 버그 가능성 있음
         query.exec("CREATE SEQUENCE IF NOT EXISTS seq_product_id"
@@ -106,11 +106,14 @@ void ProductManager::AddObj()
         productModel->setFilter("isdelete = 0");
         productModel->select();
         ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        ui -> productInputNameText-> clear();
+        ui -> productInputBrandText -> clear();
+        ui -> productInputPriceText -> clear();
+        ui -> productInputStockText -> clear();
+        return;
     }
-    ui -> productInputNameText-> clear();
-    ui -> productInputBrandText -> clear();
-    ui -> productInputPriceText -> clear();
-    ui -> productInputStockText -> clear();
+    QMessageBox::information(this, "미기입 정보", "ID를 제외한 모든 정보를 입력해 주세요");
     return;
 }
 
