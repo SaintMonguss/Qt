@@ -58,8 +58,7 @@ public slots:
     void AddObj();
     void DelObj();
     void ModiObj();
-    void SerchObj();
-    void TossOrderInfo(int);
+    void SearchObj();
     void receiveClientInfo(int, QString, QString, QString, QString);
     void receiveProductInfo(int, QString, QString, int, int);
 };

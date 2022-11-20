@@ -178,106 +178,99 @@ void OrderManager::ModiObj()
 }
 
 // 주문 정보 검색
-void OrderManager::SerchObj()
+void OrderManager::SearchObj()
 {
-    QString target = ui -> orderComboBox -> currentText();
+    QString target = ui-> orderComboBox->currentText();
+    QString search = ui-> orderSearchText->text();
     if (target == tr("orderID"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()-> GetOrderId() == ui-> orderSearchText -> text().toInt())
-                itr.value()-> setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
-    if (target == tr("clientName"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()->GetClientName() == ui -> orderSearchText -> text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        orderModel -> setFilter(QString("id like '%%1%'").arg(search.toInt()));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("clientID"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()->GetClientId() == ui -> orderSearchText -> text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        orderModel -> setFilter(QString("clientId like '%%1%'").arg(search.toInt()));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
+    if (target == tr("clientName"))
+    {
+        orderModel -> setFilter(QString("clientName like '%%1%'").arg(search));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
+    if (target == tr("productId"))
+    {
+        orderModel -> setFilter(QString("productId like '%%1%'").arg(search.toInt()));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("productName"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()->GetProductName() == ui -> orderSearchText -> text())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        orderModel -> setFilter(QString("productName like '%%1%'").arg(search));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("date"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()->GetDate() == ui -> orderSearchText ->text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        orderModel -> setFilter(QString("date like '%%1%'").arg(search));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     if (target == tr("orderPrice"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()->GetOrderPrice() == ui -> orderSearchText ->text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        orderModel -> setFilter(QString("orderPrice like '%%1%'").arg(search.toInt()));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
+    return;
     if (target == tr("orderStock"))
-        for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-        {
-            if (itr.value()->GetOrderStock() == ui -> orderSearchText ->text().toInt())
-                itr.value()->setHidden(false);
-            else
-                itr.value()->setHidden(true);
-        }
+    {
+        orderModel -> setFilter(QString("orderStock like '%%1%'").arg(search.toInt()));
+        orderModel -> select();
+        ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     return;
 }
 
 //선택시 메뉴 열리기
 void OrderManager::showContextMenu(const QPoint &pos)
 {
-    QPoint globalPos = ui->orderTreeView->mapToGlobal(pos);
+    QPoint globalPos = ui-> orderTreeView -> mapToGlobal(pos);
     menu -> exec(globalPos);
 }
 
 //선택한 항목 속성 값 라인에디터에 표시
-void OrderManager::on_orderTreeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void OrderManager::on_orderTreeView_clicked(const QModelIndex &index)
 {
-    Q_UNUSED(column);
-    ui -> orderInputIdText -> setText(item->text(0));
-    ui -> orderInputProductNameText -> setText(item->text(3));
-    ui -> orderInputClientIdText -> setText(item->text(1));
-    ui -> orderInputDateText -> setText(item->text(4));
-    ui -> orderInputOrderPriceText -> setText(item->text(5));
-    ui -> orderInputOrderStockText -> setText(item->text(6));
+    QString orderId = orderModel->data(index.siblingAtColumn(0)).toString();
+    QString clientId = orderModel->data(index.siblingAtColumn(1)).toString();
+    QString clientName = orderModel->data(index.siblingAtColumn(2)).toString();
+    QString productId = orderModel->data(index.siblingAtColumn(3)).toString();
+    QString date = orderModel->data(index.siblingAtColumn(5)).toString();
+    QString orderPrice = orderModel->data(index.siblingAtColumn(6)).toString();
+    QString orderStock = orderModel->data(index.siblingAtColumn(7)).toString();
+
+    ui -> orderInputIdText -> setText(orderId);
+    ui -> orderInputClientIdText -> setText(clientId);
+    ui -> orderInputClientNameText -> setText(clientName);
+    ui -> orderInputProductIdText -> setText(productId);
+    ui -> orderInputDateText -> setText(date);
+    ui -> orderInputOrderPriceText -> setText(orderPrice);
+    ui -> orderInputOrderStockText -> setText(orderStock);
 }
+
 
 void OrderManager::resetSearchResult()
 {
-    ui -> orderInputIdText -> clear();
-    ui -> orderInputProductNameText -> clear();
-    ui -> orderInputClientIdText -> clear();
-    ui -> orderInputDateText -> clear();
-    ui -> orderInputOrderPriceText -> clear();
-    ui -> orderInputOrderStockText -> clear();
-
-    for (auto itr = orderList.begin(); itr != orderList.end(); itr++)
-    {
-        itr.value()->setHidden(false);
-    }
+    ui -> orderSearchText-> clear();
+    orderModel->setFilter("");
+    orderModel->select();
+    ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
-void OrderManager::on_orderTreeView_clicked(const QModelIndex &index)
-{
 
-}
 
 void OrderManager::receiveClientInfo(int id, QString name, QString ph, QString address, QString email)
 {
@@ -289,6 +282,7 @@ void OrderManager::receiveClientInfo(int id, QString name, QString ph, QString a
 void OrderManager::receiveProductInfo(int id, QString name, QString brand, int price, int stock)
 {
     QSqlQuery query(orderModel->database());
-    query.prepare(QString("UPDATE order SET productName = %1, productPrice = %2 where id = %3)").arg(name, price, id));
+    query.prepare(QString("UPDATE order SET productName = %1 where id = %2)").arg(name, id));
+    query.prepare(QString("UPDATE order SET productPrice = %1 where id = %2)").arg(price, id));
     query.exec();
 }

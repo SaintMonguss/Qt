@@ -217,7 +217,7 @@ void ClientManager::SearchObj()
 //고객 한명의 정보를 리턴하는 함수
 void ClientManager::acceptClientInfoRequest(int orderId, int clientId)
 {
-    QModelIndexList indexes = clientModel->match(clientModel->index(0, 0), Qt::EditRole, id, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
+    QModelIndexList indexes = clientModel->match(clientModel->index(0, 0), Qt::EditRole, clientId, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
     foreach(auto index, indexes) {
 //    QModelIndex index = clientList[key];
