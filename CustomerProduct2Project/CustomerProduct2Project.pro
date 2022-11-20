@@ -9,9 +9,6 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Client.cpp \
-    Order.cpp \
-    Product.cpp \
     chatserverform.cpp \
     clientmanager.cpp \
     logthread.cpp \
@@ -21,9 +18,6 @@ SOURCES += \
     productmanager.cpp
 
 HEADERS += \
-    Client.h \
-    Order.h \
-    Product.h \
     chatserverform.h \
     clientmanager.h \
     logthread.h \

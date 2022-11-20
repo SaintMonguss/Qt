@@ -34,23 +34,19 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
     db.setDatabaseName("orderlist.db");
     if (db.open( )) {
         QSqlQuery query(db);
-        query.exec("CREATE TABLE IF NOT EXISTS order"
-                   "(id INTEGER Primary Key,"
+        query.exec("CREATE TABLE IF NOT EXISTS orderInfo"
+                   "(id INTEGER Primary Key AUTOINCREMENT,"
                    "clientId INTEGER NOT NULL,"
                    "clientName VARCHAR(20),"
                    "productId INTEGER NOT NULL,"
                    "productName VARCHAR(40),"
                    "date VARCHAR(30) NOT NULL,"
                    "orderPrice INTEGER,"
-                   "orderStock INTEGER NOT NULL);");
-        //ID값 시퀀스 선언
-        // 버그 가능성 있음
-        query.exec("CREATE SEQUENCE IF NOT EXISTS seq_order_id"
-                   "INCREMENT BY 1 "
-                   "START WITH 1 ;");
+                   "orderStock INTEGER NOT NULL,"
+                   "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1)));");
         orderModel = new QSqlTableModel();
-        orderModel->setTable("order");
-        orderModel->setFilter("");
+        orderModel->setTable("orderInfo");
+        orderModel->setFilter("isdelete = 0");
         orderModel->select();
         orderModel->setHeaderData(0, Qt::Horizontal, tr("ID"));
         orderModel->setHeaderData(1, Qt::Horizontal, tr("clientId"));
@@ -63,6 +59,7 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
 
         ui-> orderTreeView -> setModel(orderModel);
         ui-> orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        ui -> orderTreeView->setColumnHidden(8, true);
     }
 }
 
@@ -100,18 +97,18 @@ void OrderManager::AddObj()
         orderStock = ui -> orderInputOrderStockText -> text().toInt();
 
         QSqlQuery query(orderModel->database());
-        query.prepare("INSERT INTO order VALUES (seq_product_id.nextval, ?, ?, ?, ?, ?, ?)");
+        query.prepare("INSERT INTO orderInfo VALUES (?, ?, ?, ?, ?, ?, ?, 0)");
         query.bindValue(1, clientId);
         query.bindValue(3, productId);
         query.bindValue(5, date);
         query.bindValue(6, orderStock);
         query.exec();
-        orderId = query.boundValue(0).toInt();
+        orderId = (orderModel->rowCount());
 
         emit requestClientInfo(orderId, clientId);
         emit requestProductInfo(orderId, productId);
 
-        orderModel->setFilter("");
+        orderModel->setFilter("isdelete = 0");
         orderModel->select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -136,7 +133,8 @@ void OrderManager::DelObj()
     QModelIndex index = ui->orderTreeView->currentIndex();
     if(index.isValid())
     {
-        orderModel->setData(index.siblingAtColumn(5), 1);
+        orderModel->setData(index.siblingAtColumn(8), 1);
+        orderModel->submit();
         orderModel->select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
@@ -187,50 +185,50 @@ void OrderManager::SearchObj()
     QString search = ui-> orderSearchText->text();
     if (target == tr("orderID"))
     {
-        orderModel -> setFilter(QString("id like '%%1%'").arg(search.toInt()));
+        orderModel -> setFilter(QString("isdelete = 0 and id like '%%1%'").arg(search.toInt()));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     if (target == tr("clientID"))
     {
-        orderModel -> setFilter(QString("clientId like '%%1%'").arg(search.toInt()));
+        orderModel -> setFilter(QString("isdelete = 0 and clientId like '%%1%'").arg(search.toInt()));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     if (target == tr("clientName"))
     {
-        orderModel -> setFilter(QString("clientName like '%%1%'").arg(search));
+        orderModel -> setFilter(QString("isdelete = 0 and clientName like '%%1%'").arg(search));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     if (target == tr("productId"))
     {
-        orderModel -> setFilter(QString("productId like '%%1%'").arg(search.toInt()));
+        orderModel -> setFilter(QString("isdelete = 0 and productId like '%%1%'").arg(search.toInt()));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     if (target == tr("productName"))
     {
-        orderModel -> setFilter(QString("productName like '%%1%'").arg(search));
+        orderModel -> setFilter(QString("isdelete = 0 and productName like '%%1%'").arg(search));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     if (target == tr("date"))
     {
-        orderModel -> setFilter(QString("date like '%%1%'").arg(search));
+        orderModel -> setFilter(QString("isdelete = 0 and date like '%%1%'").arg(search));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     if (target == tr("orderPrice"))
     {
-        orderModel -> setFilter(QString("orderPrice like '%%1%'").arg(search.toInt()));
+        orderModel -> setFilter(QString("isdelete = 0 and orderPrice like '%%1%'").arg(search.toInt()));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     return;
     if (target == tr("orderStock"))
     {
-        orderModel -> setFilter(QString("orderStock like '%%1%'").arg(search.toInt()));
+        orderModel -> setFilter(QString("isdelete = 0 and orderStock like '%%1%'").arg(search.toInt()));
         orderModel -> select();
         ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
@@ -268,7 +266,7 @@ void OrderManager::on_orderTreeView_clicked(const QModelIndex &index)
 void OrderManager::resetSearchResult()
 {
     ui -> orderSearchText-> clear();
-    orderModel->setFilter("");
+    orderModel->setFilter("isdelete = 0");
     orderModel->select();
     ui->orderTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }

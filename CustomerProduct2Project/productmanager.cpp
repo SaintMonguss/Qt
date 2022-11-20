@@ -36,17 +36,12 @@ ProductManager::ProductManager(QWidget *parent) :
     if (db.open( )) {
         QSqlQuery query(db);
         query.exec("CREATE TABLE IF NOT EXISTS product"
-                   "(id INTEGER Primary Key,"
+                   "(id INTEGER Primary Key AUTOINCREMENT,"
                    "name VARCHAR(40) NOT NULL,"
                    "brand VARCHAR(40) NOT NULL,"
                    "price INTEGER,"
                    "stock INTEGER,"
                    "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1)));");
-        //ID값 시퀀스 선언
-        // 버그 가능성 있음
-        query.exec("CREATE SEQUENCE IF NOT EXISTS seq_product_id"
-                   "INCREMENT BY 1 "
-                   "START WITH 1 ;");
         productModel = new QSqlTableModel();
         productModel->setTable("product");
         productModel->setFilter("isdelete = 0");
@@ -58,6 +53,7 @@ ProductManager::ProductManager(QWidget *parent) :
         productModel->setHeaderData(4, Qt::Horizontal, tr("stock"));
 
         ui-> productTreeView->setModel(productModel);
+        ui -> productTreeView ->setColumnHidden(5 , true);
         ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
 }
@@ -97,7 +93,7 @@ void ProductManager::AddObj()
         stock = ui -> productInputStockText->text().toInt();
 
         QSqlQuery query(productModel->database());
-        query.prepare("INSERT INTO client VALUES (seq_product_id.nextval, ?, ?, ?, ?, 0)");
+        query.prepare("INSERT INTO product VALUES (?, ?, ?, ?, ?, 0)");
         query.bindValue(1, name);
         query.bindValue(2, brand);
         query.bindValue(3, price);
@@ -106,6 +102,7 @@ void ProductManager::AddObj()
         productModel->setFilter("isdelete = 0");
         productModel->select();
         ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
 
         ui -> productInputNameText-> clear();
         ui -> productInputBrandText -> clear();
@@ -124,7 +121,9 @@ void ProductManager::DelObj()
     if(index.isValid())
     {
         productModel->setData(index.siblingAtColumn(5), 1);
+        productModel -> submit();
         productModel->select();
+
         ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
 }

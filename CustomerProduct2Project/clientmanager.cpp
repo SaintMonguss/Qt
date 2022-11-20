@@ -70,6 +70,7 @@ void ClientManager::loadData()
         clientModel->setHeaderData(4, Qt::Horizontal, tr("Email"));
 
         ui-> clientTreeView->setModel(clientModel);
+        ui -> clientTreeView ->setColumnHidden(5 , true);
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     for(int i = 0; i < clientModel->rowCount(); i++)
@@ -86,7 +87,7 @@ void ClientManager::loadData()
 void ClientManager::AddObj()
 {
     QString name, phonNumber, address, email;
-    int id;
+    int id = 0;
 
     if(ui -> clientInputIDText->text() != "")
     {
@@ -111,9 +112,9 @@ void ClientManager::AddObj()
         query.bindValue(2, phonNumber);
         query.bindValue(3, address);
         query.bindValue(4, email);
-        id = (clientModel->rowCount()) + 1;
-        qDebug() << id;
         query.exec();
+        id = (clientModel->rowCount());
+        //qDebug() << id;
         clientModel->setFilter("iswithdrow = 0");
         clientModel->select();
         ui->clientTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -133,11 +134,9 @@ void ClientManager::AddObj()
 // 고객 정보 삭제
 void ClientManager::DelObj()
 {
-    qDebug() << "딜리트 함수";
     QModelIndex index = ui->clientTreeView->currentIndex();
     if(index.isValid())
     {
-        qDebug() << clientModel->data(index.siblingAtColumn(5));
         clientModel->setData(index.siblingAtColumn(5), 1);
         clientModel->submit();
         clientModel->select();
