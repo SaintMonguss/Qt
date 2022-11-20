@@ -28,6 +28,7 @@ private:
 public:
     explicit ProductManager(QWidget *parent = nullptr);
     ~ProductManager();
+    void loadData();
 
 signals:
     void sendProductInfo(int, QString, QString, int, int);

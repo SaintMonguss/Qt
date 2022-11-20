@@ -113,7 +113,7 @@ void ChatServerForm::receiveData( )
 
     switch(type) {
     case Chat_Login:
-        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchFixedString, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchFixedString, 2)) {
             if(item->text(0) != "-") {
                 item->setText(0, "-");
             }
@@ -121,7 +121,7 @@ void ChatServerForm::receiveData( )
         }
         break;
     case Chat_In:
-        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchFixedString, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchFixedString, 2)) {
             if(item->text(0) != "O") {
                 item->setText(0, "O");
             }
@@ -165,7 +165,7 @@ void ChatServerForm::receiveData( )
     }
         break;
     case Chat_Out:
-        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 2)) {
             if(item->text(0) != "-") {
                 item->setText(0, "-");
             }
@@ -173,7 +173,7 @@ void ChatServerForm::receiveData( )
         }
         break;
     case Chat_LogOut:
-        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 2)) {
             if(item->text(0) != "X") {
                 item->setText(0, "X");
             }
@@ -188,7 +188,7 @@ void ChatServerForm::removeClient()
     QTcpSocket *clientConnection = dynamic_cast<QTcpSocket *>(sender( ));
     if(clientConnection != nullptr) {
         QString name = clientNameHash[clientConnection->peerPort()];
-        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 1)) {
+        foreach(auto item, ui->chatClientTreeWidget->findItems(name, Qt::MatchContains, 2)) {
             item->setText(0, "X"); // 상태 변경
         }
         clientSocketHash.remove(name);
@@ -213,7 +213,7 @@ void ChatServerForm::deleteClient(int id, QString name)
     if(clientIDHash.find(name) != clientIDHash.end())
     {
         //qDebug() << "작동중2";
-        foreach(auto item, ui->chatClientTreeWidget->findItems(QString::number(id), Qt::MatchContains, 1))
+        foreach(auto item, ui->chatClientTreeWidget->findItems(QString::number(id), Qt::MatchContains, 2))
         {
             ui->chatClientTreeWidget->takeTopLevelItem(ui->chatClientTreeWidget->indexOfTopLevelItem(item));
             //qDebug() << "작동중3";

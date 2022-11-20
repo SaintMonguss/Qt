@@ -12,20 +12,6 @@ using std::string;
 class QSqlTableModel;
 class QSqlDatabase;
 
-struct clientInfo
-{
-    QString name;
-    QString ph;
-    QString address;
-    QString email;
-};
-
-struct productInfo
-{
-    QString name;
-
-};
-
 namespace Ui {
 class OrderManager;
 }
@@ -39,11 +25,10 @@ private:
     Ui::OrderManager *ui;
     QSqlTableModel* orderModel;
 
-
-
 public:
     explicit OrderManager(QWidget *parent = nullptr);
     ~OrderManager();
+    void loadData();
 
 signals:
     void requestClientInfo(int, int); //clientManager 에게 정보 요청

@@ -30,7 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
             chatServerForm, SLOT(addClient(int, QString)), Qt::QueuedConnection);
     connect(clientManager, SIGNAL(clientDeleted(int, QString)),
             chatServerForm, SLOT(deleteClient(int, QString)), Qt::QueuedConnection);
+
     clientManager -> loadData();
+    productManager -> loadData();
+    orderManager -> loadData();
 
     // orderManager의 정보 요청에 대한 반응 연결
     //client측

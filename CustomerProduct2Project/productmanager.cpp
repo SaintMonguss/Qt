@@ -30,7 +30,11 @@ ProductManager::ProductManager(QWidget *parent) :
     connect(ui -> productModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui-> productInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> productResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
+}
+
     //DB 관련 선언부
+void ProductManager::loadData()
+{
     QSqlDatabase db = QSqlDatabase::database();
     db.setDatabaseName("productlist.db");
     if (db.open( )) {
@@ -91,7 +95,7 @@ void ProductManager::AddObj()
         brand = ui -> productInputBrandText->text();
         price = ui -> productInputPriceText->text().toInt();
         stock = ui -> productInputStockText->text().toInt();
-
+        qDebug() << "뭐임";
         QSqlQuery query(productModel->database());
         query.prepare("INSERT INTO product VALUES (?, ?, ?, ?, ?, 0)");
         query.bindValue(1, name);
@@ -99,10 +103,10 @@ void ProductManager::AddObj()
         query.bindValue(3, price);
         query.bindValue(4, stock);
         query.exec();
+        qDebug() << "대체 뭐임";
         productModel->setFilter("isdelete = 0");
         productModel->select();
         ui->productTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
 
         ui -> productInputNameText-> clear();
         ui -> productInputBrandText -> clear();

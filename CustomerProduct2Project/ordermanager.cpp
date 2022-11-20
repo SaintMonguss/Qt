@@ -28,8 +28,10 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
     connect(ui -> orderModifyButton, SIGNAL(clicked()), this, SLOT(ModiObj()));
     connect(ui -> orderInputConfirmButton, SIGNAL(clicked()), SLOT(AddObj()));
     connect(ui -> orderResetButton, SIGNAL(clicked()), SLOT(resetSearchResult()));
-
+}
     //DB 관련 선언부
+void OrderManager::loadData()
+{
     QSqlDatabase db = QSqlDatabase::database();
     db.setDatabaseName("orderlist.db");
     if (db.open( )) {
