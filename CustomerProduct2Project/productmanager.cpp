@@ -35,7 +35,7 @@ ProductManager::ProductManager(QWidget *parent) :
     //DB 관련 선언부
 void ProductManager::loadData()
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "productDBConnection");
     db.setDatabaseName("productlist.db");
     if (db.open( )) {
         QSqlQuery query(db);
@@ -46,7 +46,7 @@ void ProductManager::loadData()
                    "price INTEGER,"
                    "stock INTEGER,"
                    "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1)));");
-        productModel = new QSqlTableModel();
+        productModel = new QSqlTableModel(nullptr, db);
         productModel->setTable("product");
         productModel->setFilter("isdelete = 0");
         productModel->select();
@@ -95,8 +95,8 @@ void ProductManager::AddObj()
         brand = ui -> productInputBrandText->text();
         price = ui -> productInputPriceText->text().toInt();
         stock = ui -> productInputStockText->text().toInt();
-        qDebug() << "뭐임";
-        QSqlQuery query(productModel->database());
+        QSqlDatabase db = QSqlDatabase::database("productDBConnection");
+        QSqlQuery query(db);
         query.prepare("INSERT INTO product VALUES (?, ?, ?, ?, ?, 0)");
         query.bindValue(1, name);
         query.bindValue(2, brand);

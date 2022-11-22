@@ -32,7 +32,7 @@ OrderManager::OrderManager(QWidget *parent) : QWidget(parent),
     //DB 관련 선언부
 void OrderManager::loadData()
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","orderDBConnection");
     db.setDatabaseName("orderlist.db");
     if (db.open( )) {
         QSqlQuery query(db);
@@ -46,7 +46,7 @@ void OrderManager::loadData()
                    "orderPrice INTEGER,"
                    "orderStock INTEGER NOT NULL,"
                    "isdelete BOOLEAN NOT NULL CHECK (isdelete IN (0, 1)));");
-        orderModel = new QSqlTableModel();
+        orderModel = new QSqlTableModel(nullptr, db);
         orderModel->setTable("orderInfo");
         orderModel->setFilter("isdelete = 0");
         orderModel->select();
@@ -97,8 +97,8 @@ void OrderManager::AddObj()
         productId = ui -> orderInputProductIdText -> text().toInt();
         date = ui -> orderInputDateText->text();
         orderStock = ui -> orderInputOrderStockText -> text().toInt();
-
-        QSqlQuery query(orderModel->database());
+        QSqlDatabase db = QSqlDatabase::database("orderDBConnection");
+        QSqlQuery query(db);
         query.prepare("INSERT INTO orderInfo VALUES (?, ?, ?, ?, ?, ?, ?, 0)");
         query.bindValue(1, clientId);
         query.bindValue(3, productId);

@@ -36,7 +36,7 @@ ClientManager::ClientManager(QWidget *parent) :
 ClientManager::~ClientManager()
 {
     delete ui;
-    QSqlDatabase db = clientModel->database();
+    QSqlDatabase db = QSqlDatabase::database("clientDBConnection");
     if(db.isOpen())
     {
         clientModel->submitAll();
@@ -48,7 +48,7 @@ ClientManager::~ClientManager()
 // DB관련 구현부
 void ClientManager::loadData()
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "clientDBConnection");
     db.setDatabaseName("clientlist.db");
     if (db.open( )) {
         QSqlQuery query(db);
@@ -59,7 +59,7 @@ void ClientManager::loadData()
                    "address VARCHAR(50),"
                    "email VARCHAR(20),"
                    "iswithdrow BOOLEAN NOT NULL CHECK (iswithdrow IN (0, 1)));");
-        clientModel = new QSqlTableModel();
+        clientModel = new QSqlTableModel(nullptr, db);
         clientModel->setTable("client");
         clientModel->setFilter("iswithdrow = 0");
         clientModel->select();
@@ -105,14 +105,14 @@ void ClientManager::AddObj()
         phonNumber = ui -> clientInputPHText->text();
         address = ui -> clientInputAddressText->text();
         email = ui -> clientInputEmailText->text();
-
-        QSqlQuery query(clientModel->database());
+        QSqlDatabase db = QSqlDatabase::database("clientDBConnection");
+        QSqlQuery query(db);
         query.prepare("INSERT INTO client VALUES (?, ?, ?, ?, ?, 0)");
         query.bindValue(1, name);
         query.bindValue(2, phonNumber);
         query.bindValue(3, address);
         query.bindValue(4, email);
-        query.exec();
+        qDebug() << query.exec();
         clientModel->setFilter("");
         id = (clientModel->rowCount());
        //qDebug() << id;
