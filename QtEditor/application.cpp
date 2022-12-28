@@ -1,5 +1,5 @@
 #include "application.h"
-#include "qteditor.h"
+
 
 #include <QDebug>
 
