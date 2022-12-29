@@ -10,10 +10,10 @@ CONFIG += c++17 qtestlib
 
 SOURCES += \
     main.cpp \
-    debugerhandler.cpp
+    widget.cpp
 
 HEADERS += \
-    debugerhandler.h
+    widget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
