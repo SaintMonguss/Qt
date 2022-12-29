@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 
 #include <QtWidgets>
+#include <QDomDocument>
+#include <QDomNodeList>
 #include <QSettings>
 #include "libs.h"
 
@@ -21,6 +23,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     act->setIcon(style( )->standardIcon(QStyle::SP_BrowserReload));
     connect(act, SIGNAL(triggered( )), SLOT(openRssFeed( )));
     toolbar->addAction(act);
+
+    tv = new QListView;
+    connect(tv, SIGNAL(doubleClicked(QModelIndex)),SLOT(listViewdoubleClicked(QModelIndex)));
+    model = new QStandardItemModel(0,1 ,this);
+    tv -> setModel(model);
+    QSplitter * splitter = new QSplitter;
+    splitter -> addWidget(tv);
+    this -> setCentralWidget(splitter);
 
     /* 기본 RSS 피드 사이트 등록 */
     combo->addItem("http://news.google.co.kr/news?cf=all&hl=ko&output=rss");
@@ -54,6 +64,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     if(urlList.count() == 0)
         combo -> addItem("http://rss.joins.com/joins_news_list.xml");
+
+    tv -> setModel(model);
+
+    progress = new QProgressBar(this);
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finishjed(QNetworkReply*)),
+            SLOT(replyFinished(QNetworkReply*)));
 }
 
 MainWindow::~MainWindow( )
@@ -95,9 +113,40 @@ void MainWindow::openRssFeed( )
     manager->get(QNetworkRequest(QUrl(combo->currentText( ))));
 }
 
+void MainWindow::listViewDoubleClicked(const QModelIndex &index)
+{
+    qDebug("listViewDoubleClicked");
+}
+
 void MainWindow::replyFinished(QNetworkReply *netReply)
 {
     QString str(netReply->readAll( ));
+
+    QVariant vt = netReply -> attribute(QNetworkRequest::RedirectionTargetAttribute);
+    if(!vt.isNull())
+    {
+        qDebug() << "Redirected to:" << vt.toUrl().toString();
+        QNetworkReply* reply = manager -> get(QNetworkRequest(vt.toUrl()));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(downloadProgress(qint64, qint64)));
+    }
+    else
+    {
+        QDomDocument doc;
+        QString error;
+        if(!doc.setContent(str, false, &error))
+        {
+            qDebug("Error");
+        }
+        else
+        {
+            QDomElement docElem = doc.documentElement();
+            QDomNodeList nodeList = docElem.elementsByTagName("item");
+
+            model -> clear();
+            model -> insertColumn(0);
+        }
+    }
+
     qDebug("%s", qPrintable(str));
 }
 

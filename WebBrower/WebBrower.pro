@@ -1,4 +1,4 @@
-QT       += core gui network webenginewidgets xml
+QT       += core gui webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,13 +10,10 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    webbrower.cpp
 
 HEADERS += \
-    libs.h \
-    mainwindow.h
-
-LIBS  += -L. -llibs
+    webbrower.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
